@@ -47,14 +47,14 @@
     <!-- 地図 -->
     <div id="map" class="flex-1 w-full"></div>
 
-    <!-- 下部：選択店舗のカード -->
+    <!-- 下部：店舗詳細カード -->
     <div id="spot-card" class="hidden absolute bottom-4 left-3 right-3 z-20 bg-white p-4 rounded-2xl shadow-2xl border border-slate-100 transition-all">
       <button onclick="closeCard()" class="absolute top-3 right-3 text-slate-400 hover:text-slate-600 text-lg leading-none p-1">✕</button>
       <div id="spot-area" class="text-[11px] font-bold text-amber-600 mb-0.5"></div>
       
-      <!-- 外部リンク付き店名 -->
+      <!-- 店名タップでGoogleマップ（写真・営業情報・ルート）にジャンプ -->
       <h2 class="text-base font-bold text-slate-900 mb-1 pr-6 leading-snug">
-        <a id="spot-name-link" href="#" target="_blank" rel="noopener noreferrer" class="hover:underline text-indigo-900 flex items-center gap-1">
+        <a id="spot-name-link" href="#" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:underline flex items-center gap-1">
           <span id="spot-name"></span>
           <span class="text-xs text-slate-400">↗</span>
         </a>
@@ -67,18 +67,12 @@
 
       <!-- 備考・ルール -->
       <p id="spot-note" class="text-xs text-slate-600 bg-slate-50 p-2.5 rounded-lg leading-relaxed"></p>
-      
-      <div class="mt-2 text-right">
-        <a id="spot-btn-link" href="#" target="_blank" rel="noopener noreferrer" class="inline-block text-xs font-semibold text-white bg-slate-900 px-3 py-1.5 rounded-lg">
-          お店のWEB/詳細を見る ↗
-        </a>
-      </div>
     </div>
 
   </div>
 
   <script>
-    // 実在する湘南（鵠沼・鎌倉・藤沢）の店内OK店舗
+    // 実在店舗データ（URLはエラーの起きないGoogleマップ検索リンクに統一）
     const SPOTS = [
       {
         id: 1,
@@ -91,8 +85,8 @@
         largeDog: true,
         parking: true,
         pantsRequired: false,
-        url: "https://www.instagram.com/7325coffee/",
-        note: "鵠沼海岸駅近く。落ち着いた店内で愛犬と一緒に本格コーヒーや焼き菓子を楽しめます。大型犬も歓迎。"
+        url: "https://www.google.com/maps/search/?api=1&query=7325coffee+藤沢市鵠沼海岸",
+        note: "鵠沼海岸駅近く。落ち着いた店内で本格珈琲や焼き菓子が楽しめます。大型犬もOK。マット持参推奨。"
       },
       {
         id: 2,
@@ -105,8 +99,8 @@
         largeDog: true,
         parking: false,
         pantsRequired: false,
-        url: "https://www.instagram.com/days_kugenuma/",
-        note: "鵠沼海岸商店街沿い。愛犬連れサーファーやローカルに人気の店内同伴可カフェ。"
+        url: "https://www.google.com/maps/search/?api=1&query=Days+Kugenuma",
+        note: "鵠沼海岸商店街沿い。ローカルや愛犬家に親しまれる店内同伴OKのダイナーカフェ。"
       },
       {
         id: 3,
@@ -119,8 +113,8 @@
         largeDog: true,
         parking: true,
         pantsRequired: false,
-        url: "https://www.instagram.com/dogcafeandy/",
-        note: "わんこファーストのドッグカフェ。手作りわんこメニューが充実しており、大型犬もOK。"
+        url: "https://www.google.com/maps/search/?api=1&query=Dog+Cafe+Andy+藤沢市本鵠沼",
+        note: "わんこメニューが充実した本格ドッグカフェ。大型犬も気兼ねなく店内利用できます。"
       },
       {
         id: 4,
@@ -133,8 +127,8 @@
         largeDog: true,
         parking: true,
         pantsRequired: true,
-        url: "https://www.andycafe.com/kamakura/",
-        note: "由比ヶ浜近くの総合ドッグカフェ。店内全席同伴OKでわんこ用メニューも豊富です。"
+        url: "https://www.google.com/maps/search/?api=1&query=Andy+Cafe+鎌倉店",
+        note: "由比ヶ浜近くの総合ドッグカフェ。店内全席同伴OKで愛犬用メニューも多数あり。"
       },
       {
         id: 5,
@@ -147,8 +141,8 @@
         largeDog: false,
         parking: false,
         pantsRequired: false,
-        url: "https://ghghgh.jp/pages/gardenhousekamakura",
-        note: "鎌倉駅西口すぐ。※一部の屋内・半屋内席エリアおよびテラスで同伴可能です（予約・事前確認推奨）。"
+        url: "https://www.google.com/maps/search/?api=1&query=GARDEN+HOUSE+Kamakura",
+        note: "鎌倉駅西口すぐ。※一部の屋内席・半屋内席エリアで同伴可能（予約・確認推奨）。"
       },
       {
         id: 6,
@@ -161,7 +155,7 @@
         largeDog: false,
         parking: false,
         pantsRequired: false,
-        url: "https://tabelog.com/kanagawa/A1404/A140402/14035651/",
+        url: "https://www.google.com/maps/search/?api=1&query=café蕾+鎌倉市長谷",
         note: "長谷寺近く。落ち着いた古民家風の店内で、愛犬と一緒にくずきりや和スイーツを味わえます。"
       },
       {
@@ -175,8 +169,8 @@
         largeDog: false,
         parking: false,
         pantsRequired: false,
-        url: "https://tabelog.com/kanagawa/A1404/A140402/14002422/",
-        note: "小町通りの脇道にある老舗カフェ。天候を気にせず店内でゆったりランチが楽しめます。"
+        url: "https://www.google.com/maps/search/?api=1&query=グランメール+鎌倉市雪ノ下",
+        note: "小町通りの脇道にある老舗カフェ。天候に左右されず店内でゆったり洋食ランチを楽しめます。"
       },
       {
         id: 8,
@@ -189,8 +183,8 @@
         largeDog: false,
         parking: false,
         pantsRequired: false,
-        url: "https://www.instagram.com/soundwave_coffee_roasters/",
-        note: "藤沢駅南口の自家焙煎スペシャルティコーヒー店。店内同伴OKで愛犬家のお散歩寄り道スポット。"
+        url: "https://www.google.com/maps/search/?api=1&query=soundwave+coffee+roasters+藤沢",
+        note: "藤沢駅南口の自家焙煎珈琲店。店内同伴OKで、お散歩中の休憩にぴったり。"
       },
       {
         id: 9,
@@ -203,8 +197,8 @@
         largeDog: false,
         parking: false,
         pantsRequired: false,
-        url: "https://www.instagram.com/saji_fujisawa/",
-        note: "藤沢駅近くのお洒落なビストロ。店内で愛犬と一緒に本格料理や自然派ワインが楽しめます。"
+        url: "https://www.google.com/maps/search/?api=1&query=SAJI+藤沢市鵠沼石上",
+        note: "藤沢駅近くのお洒落なビストロ。店内で愛犬と一緒に自然派ワインや創作料理を楽しめます。"
       },
       {
         id: 10,
@@ -217,12 +211,12 @@
         largeDog: true,
         parking: true,
         pantsRequired: false,
-        url: "https://www.instagram.com/greenstampscoffee/",
-        note: "海へ向かう通り沿いにある大人気カフェ。アットホームで大型犬も店内でくつろげます。"
+        url: "https://www.google.com/maps/search/?api=1&query=GREEN+STAMPS+COFFEE+辻堂",
+        note: "海へ向かう通り沿いの人気カフェ。アットホームで大型犬も店内でくつろげます。"
       }
     ];
 
-    // 湘南エリア外へのスクロール・ズームアウトを防ぐ設定（境界線）
+    // エリア境界
     const southWest = L.latLng(35.2800, 139.4200);
     const northEast = L.latLng(35.3600, 139.5800);
     const shonanBounds = L.latLngBounds(southWest, northEast);
@@ -266,11 +260,11 @@
       // 店名リンク設定
       document.getElementById('spot-name').innerText = spot.name;
       document.getElementById('spot-name-link').href = spot.url;
-      document.getElementById('spot-btn-link').href = spot.url;
 
       document.getElementById('spot-address-text').innerText = spot.address;
       document.getElementById('spot-note').innerText = spot.note;
 
+      // バッジ生成
       const badgeContainer = document.getElementById('spot-badges');
       badgeContainer.innerHTML = '';
       if (spot.largeDog) {
