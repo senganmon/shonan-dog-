@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>湘南 犬と店内チェッカー</title>
+  
+  <!-- PWA設定（ホーム画面追加で全画面アプリ化） -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="犬と店内" />
+  <meta name="theme-color" content="#ffffff" />
+  
+  <!-- Tailwind CSS & Leaflet CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <style>
+    body, html { height: 100%; margin: 0; padding: 0; overflow: hidden; }
+    #map { height: 100%; width: 100%; z-index: 1; }
+  </style>
+</head>
+<body class="bg-slate-100 font-sans antialiased text-slate-800">
+
+  <!-- アプリ全体コンテナ -->
+  <div class="flex flex-col h-full w-full max-w-md mx-auto relative shadow-2xl bg-white overflow-hidden">
+    
+    <!-- 上部ヘッダー -->
+    <header class="absolute top-0 left-0 right-0 z-10 bg-white/95 backdrop-blur shadow-sm p-3 border-b border-slate-100">
+      <div class="flex items-center justify-between mb-2">
+        <div class="flex items-center space-x-1.5">
+          <span class="text-xl">🐶</span>
+          <h1 class="text-sm font-bold text-slate-900 tracking-tight">湘南 犬と店内チェッカー</h1>
+        </div>
+        <span class="text-[10px] font-bold bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full">
+          店内同伴OK限定
+        </span>
+      </div>
+
+      <!-- エリア切り替えタブ -->
+      <div class="flex space-x-1.5" id="area-filters">
+        <button onclick="filterArea('ALL')" class="area-btn active text-xs px-3 py-1 rounded-full font-medium bg-slate-900 text-white">全エリア</button>
+        <button onclick="filterArea('鵠沼')" class="area-btn text-xs px-3 py-1 rounded-full font-medium bg-slate-100 text-slate-600">鵠沼</button>
+        <button onclick="filterArea('鎌倉')" class="area-btn text-xs px-3 py-1 rounded-full font-medium bg-slate-100 text-slate-600">鎌倉</button>
+        <button onclick="filterArea('藤沢')" class="area-btn text-xs px-3 py-1 rounded-full font-medium bg-slate-100 text-slate-600">藤沢</button>
+      </div>
+    </header>
+
+    <!-- 地図コンテナ -->
+    <div id="map" class="flex-1 w-full"></div>
+
+    <!-- 下部：選択店舗のカード（初期状態は非表示） -->
+    <div id="spot-card" class="hidden absolute bottom-4 left-3 right-3 z-20 bg-white p-4 rounded-2xl shadow-xl border border-slate-100 transition-transform">
+      <button onclick="closeCard()" class="absolute top-3 right-3 text-slate-400 hover:text-slate-600 text-lg leading-none p-1">✕</button>
+      <div id="spot-area" class="text-[11px] font-bold text-amber-600 mb-0.5"></div>
+      <h2 id="spot-name" class="text-base font-bold text-slate-900 mb-1 pr-6 leading-snug"></h2>
+      <p id="spot-address" class="text-xs text-slate-500 mb-2.5 flex items-center">📍 <span class="ml-1" id="spot-address-text"></span></p>
+
+      <!-- バッジ表示エリア -->
+      <div id="spot-badges" class="flex flex-wrap gap-1 mb-2.5"></div>
+
+      <!-- 備考・ルール -->
+      <p id="spot-note" class="text-xs text-slate-600 bg-slate-50 p-2.5 rounded-lg leading-relaxed"></p>
+    </div>
+
+  </div>
+
+  <script>
+    // 1. 店舗データ（ここにお店を追加・編集していくだけで反映されます）
+    const SPOTS = [
+      {
+        id: 1,
+        name: "鵠沼海岸 カフェ＆ダイナー",
+        area: "鵠沼",
+        address: "藤沢市鵠沼海岸1丁目",
+        lat: 35.3175,
+        lng: 139.4682,
+        category: "カフェ・軽食",
+        largeDog: true,
+        parking: true,
+        pantsRequired: false,
+        note: "海散歩帰りに最適。大型犬も店内ゆったり入れます。マット持参推奨。"
+      },
+      {
+        id: 2,
+        name: "鎌倉小町 裏路地ビストロ",
+        area: "鎌倉",
+        address: "鎌倉市小町2丁目",
+        lat: 35.3218,
+        lng: 139.5532,
+        category: "ビストロ・ワイン",
+        largeDog: false,
+        parking: false,
+        pantsRequired: true,
+        note: "店内奥のテーブル席のみ同伴可。マナーパンツ着用必須です。"
+      },
+      {
+        id: 3,
+        name: "藤沢駅南口 ロースタリーカフェ",
+        area: "藤沢",
+        address: "藤沢市南藤沢",
+        lat: 35.3378,
+        lng: 139.4891,
+        category: "コーヒー・ベーカリー",
+        largeDog: false,
+        parking: false,
+        pantsRequired: false,
+        note: "駅近で雨の日に重宝する店内OKカフェ。リードフックあり。"
+      },
+      {
+        id: 4,
+        name: "長谷・由比ヶ浜 古民家カフェ",
+        area: "鎌倉",
+        address: "鎌倉市長谷2丁目",
+        lat: 35.3130,
+        lng: 139.5350,
+        category: "和カフェ",
+        largeDog: true,
+        parking: true,
+        pantsRequired: false,
+        note: "土間スペースは大型犬まで店内OK。落ち着いた雰囲気で休憩できます。"
+      }
+    ];
+
+    // 2. 地図の初期化（鵠沼〜鎌倉の中間）
+    const map = L.map('map', { zoomControl: false }).setView([35.3220, 139.5100], 13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap'
+    }).addTo(map);
+
+    let markers = [];
+    let currentArea = 'ALL';
+
+    // 3. マーカー描画関数
+    function renderMarkers(area) {
+      // 既存ピンを削除
+      markers.forEach(m => map.removeLayer(m));
+      markers = [];
+
+      const filtered = area === 'ALL' ? SPOTS : SPOTS.filter(s => s.area === area);
+
+      filtered.forEach(spot => {
+        const marker = L.marker([spot.lat, spot.lng]).addTo(map);
+        marker.on('click', () => showDetail(spot));
+        markers.push(marker);
+      });
+
+      // エリア選択時に地図をフィット
+      if (filtered.length > 0 && area !== 'ALL') {
+        const group = new L.featureGroup(markers);
+        map.fitBounds(group.getBounds().pad(0.2));
+      }
+    }
+
+    // 4. 店舗詳細カードの表示
+    function showDetail(spot) {
+      document.getElementById('spot-area').innerText = `${spot.area} ・ ${spot.category}`;
+      document.getElementById('spot-name').innerText = spot.name;
+      document.getElementById('spot-address-text').innerText = spot.address;
+      document.getElementById('spot-note').innerText = spot.note;
+
+      // バッジ生成
+      const badgeContainer = document.getElementById('spot-badges');
+      badgeContainer.innerHTML = '';
+      if (spot.largeDog) {
+        badgeContainer.innerHTML += `<span class="text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 px-1.5 py-0.5 rounded">大型犬OK</span>`;
+      }
+      if (spot.parking) {
+        badgeContainer.innerHTML += `<span class="text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200 px-1.5 py-0.5 rounded">🅿️ 駐車場あり</span>`;
+      }
+      if (spot.pantsRequired) {
+        badgeContainer.innerHTML += `<span class="text-[10px] font-bold bg-rose-50 text-rose-700 border border-rose-200 px-1.5 py-0.5 rounded">マナーパンツ必須</span>`;
+      }
+
+      document.getElementById('spot-card').classList.remove('hidden');
+      map.panTo([spot.lat, spot.lng]);
+    }
+
+    function closeCard() {
+      document.getElementById('spot-card').classList.add('hidden');
+    }
+
+    // 5. エリア絞り込みボタン
+    function filterArea(area) {
+      currentArea = area;
+      closeCard();
+      
+      document.querySelectorAll('.area-btn').forEach(btn => {
+        if (btn.innerText.includes(area) || (area === 'ALL' && btn.innerText === '全エリア')) {
+          btn.className = 'area-btn text-xs px-3 py-1 rounded-full font-medium bg-slate-900 text-white';
+        } else {
+          btn.className = 'area-btn text-xs px-3 py-1 rounded-full font-medium bg-slate-100 text-slate-600';
+        }
+      });
+
+      renderMarkers(area);
+      if (area === 'ALL') {
+        map.setView([35.3220, 139.5100], 13);
+      }
+    }
+
+    // 初回描画
+    renderMarkers('ALL');
+  </script>
+</body>
+</html>
