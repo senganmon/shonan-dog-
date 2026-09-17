@@ -51,49 +51,45 @@
     <!-- 店舗カード一覧リスト -->
     <main class="flex-1 p-3.5 space-y-3.5" id="spot-list"></main>
 
+    <!-- フッター：情報鮮度維持のための報告導線 -->
+    <footer class="mt-4 px-4 text-center">
+      <div class="p-3 bg-slate-100 rounded-xl border border-slate-200 text-xs text-slate-500">
+        <p class="font-bold text-slate-700 mb-1">閉店・ルール変更にお気づきの方へ</p>
+        <p class="text-[11px] leading-relaxed">
+          飲食店の同伴ルールは変更される場合があります。来店前の電話確認をおすすめします。
+        </p>
+      </div>
+    </footer>
+
   </div>
 
   <script>
-    // ジャンルごとのアクセントカラー＆アイコン
     const CATEGORY_STYLES = {
-      coffee: { icon: "☕", gradient: "from-amber-600 to-yellow-600", tagBg: "bg-amber-50 text-amber-900" },
-      diner:  { icon: "🍔", gradient: "from-sky-600 to-indigo-600",  tagBg: "bg-sky-50 text-sky-900" },
-      dining: { icon: "🍷", gradient: "from-rose-600 to-pink-600",   tagBg: "bg-rose-50 text-rose-900" },
-      sweet:  { icon: "🍦", gradient: "from-emerald-600 to-teal-600", tagBg: "bg-emerald-50 text-emerald-900" },
-      dog:    { icon: "🐾", gradient: "from-orange-500 to-amber-500", tagBg: "bg-orange-50 text-orange-900" }
+      coffee: { icon: "☕", gradient: "from-amber-600 to-yellow-600" },
+      diner:  { icon: "🍔", gradient: "from-sky-600 to-indigo-600" },
+      dining: { icon: "🍷", gradient: "from-rose-600 to-pink-600" },
+      sweet:  { icon: "🍦", gradient: "from-emerald-600 to-teal-600" },
+      bread:  { icon: "🥐", gradient: "from-orange-600 to-amber-600" }
     };
 
+    // 閉店店舗を除外し、営業中の厳選リストに更新
     const SPOTS = [
       {
         id: 1,
         name: "7325coffee（ナミニココーヒー）",
         area: "鵠沼",
         type: "coffee",
-        categoryText: "自家焙煎珈琲・ベイク",
+        categoryText: "自家焙煎珈琲・スイーツ",
         address: "藤沢市鵠沼海岸1-9-17",
         style: "椅子（マット） / 床OK",
         parking: "あり",
         pants: "任意（マナー重視）",
-        highlight: "海散歩帰りの定番スポット",
+        highlight: "鵠沼海岸駅前・海散歩の定番",
         url: "https://www.google.com/maps/search/?api=1&query=7325coffee+藤沢市鵠沼海岸1丁目",
-        note: "ウッド調の温かい店内。店員さんも犬好きでトイプー歓迎。カフェマット持参がおすすめです。"
+        note: "ウッド調の落ち着く空間。店主さんも犬好きでトイプー大歓迎。カフェマット持参推奨です。"
       },
       {
         id: 2,
-        name: "Days Kugenuma",
-        area: "鵠沼",
-        type: "diner",
-        categoryText: "アメリカンダイナー",
-        address: "藤沢市鵠沼海岸2-7-7",
-        style: "テーブル席・足元OK",
-        parking: "近隣コインP",
-        pants: "任意",
-        highlight: "鵠沼海岸商店街すぐ",
-        url: "https://www.google.com/maps/search/?api=1&query=Days+Kugenuma+藤沢市鵠沼海岸",
-        note: "ハンバーガーやカフェご飯をトイプーと一緒に店内でゆったり楽しめます。"
-      },
-      {
-        id: 3,
         name: "Cafe Grand-Mere（グランメール）",
         area: "鎌倉",
         type: "dining",
@@ -104,38 +100,24 @@
         pants: "任意",
         highlight: "雨の日の小町通りで重宝",
         url: "https://www.google.com/maps/search/?api=1&query=グランメール+鎌倉市雪ノ下1丁目8-36",
-        note: "小町通りの路地裏2F。落ち着いた洋食屋さんで、天候問わず店内でトイプーと食事ができます。"
+        note: "小町通りの路地裏2F。雨風を完全に防げる店内で、トイプーと一緒に本格洋食が楽しめます。"
       },
       {
-        id: 4,
-        name: "Andy Cafe 鎌倉店",
-        area: "鎌倉",
-        type: "dog",
-        categoryText: "本格ドッグカフェ",
-        address: "鎌倉市由比ガ浜2-22-11",
-        style: "全席同伴OK・ソファー可",
-        parking: "専用あり",
-        pants: "必須（販売あり）",
-        highlight: "わんこメニュー充実",
-        url: "https://www.google.com/maps/search/?api=1&query=Andy+Cafe+鎌倉店",
-        note: "由比ヶ浜すぐ。ワンちゃん専用の温かいご飯が頼めます。店内衛生のためマナーパンツ必須。"
-      },
-      {
-        id: 5,
+        id: 3,
         name: "café蕾（カフェ ツボミ）",
         area: "鎌倉",
-        type: "sweet",
-        categoryText: "和カフェ・甘味処",
         address: "鎌倉市長谷2-13-37",
+        type: "sweet",
+        categoryText: "古民家和カフェ・甘味",
         style: "足元 / 抱っこ",
         parking: "なし",
         pants: "任意",
-        highlight: "長谷寺・大仏散策の休憩に",
+        highlight: "長谷寺・由比ヶ浜散策の休憩",
         url: "https://www.google.com/maps/search/?api=1&query=カフェ蕾+鎌倉市長谷2丁目",
-        note: "風情ある古民家でくずきりや和スイーツを。静かに落ち着いて過ごしたい時に最適です。"
+        note: "風情ある古民家でくずきりや和スイーツを。静かにゆったり休憩したい時に最適です。"
       },
       {
-        id: 6,
+        id: 4,
         name: "soundwave coffee roasters",
         area: "藤沢",
         type: "coffee",
@@ -146,24 +128,24 @@
         pants: "任意",
         highlight: "藤沢駅南口から徒歩3分",
         url: "https://www.google.com/maps/search/?api=1&query=soundwave+coffee+roasters+藤沢市",
-        note: "美味しいスペシャリティコーヒーが飲めるスタンド。駅近で犬連れ店内入店できる貴重なお店。"
+        note: "こだわりのスペシャリティコーヒー専門店。駅近で小型犬と店内に入れる貴重なスポット。"
       },
       {
-        id: 7,
+        id: 5,
         name: "SAJI（サジ）",
         area: "藤沢",
         type: "dining",
-        categoryText: "ビストロ・ワイン",
+        categoryText: "ナチュラルワイン・ビストロ",
         address: "藤沢市鵠沼石上2-1-11",
         style: "抱っこ / 足元",
         parking: "なし",
         pants: "任意",
         highlight: "夜もトイプーとディナーOK",
         url: "https://www.google.com/maps/search/?api=1&query=SAJI+藤沢市鵠沼石上2丁目",
-        note: "ナチュールワインとお料理が美味しい隠れ家店。愛犬と一緒に本格ビストロが味わえます。"
+        note: "ワインと料理が評判の隠れ家ビストロ。店内で愛犬と一緒にディナーやお酒が楽しめます。"
       },
       {
-        id: 8,
+        id: 6,
         name: "Plenty's（プレンティーズ 茅ヶ崎本店）",
         area: "茅ヶ崎",
         type: "sweet",
@@ -172,26 +154,26 @@
         style: "奥のイートイン席OK",
         parking: "提携あり",
         pants: "任意",
-        highlight: "茅ヶ崎の超有名アイス",
+        highlight: "茅ヶ崎の超有名アイス店",
         url: "https://www.google.com/maps/search/?api=1&query=プレンティーズ+茅ヶ崎本店",
-        note: "イートイン席でトイプーを抱っこして食べられます。夏場のお散歩帰りにも人気。"
+        note: "雄三通り沿い。店内奥のイートイン席でトイプーを抱っこして涼みながらアイスを食べられます。"
       },
       {
-        id: 9,
+        id: 7,
         name: "サザンビーチカフェ",
         area: "茅ヶ崎",
         type: "diner",
         categoryText: "シーサイドダイナー",
         address: "茅ヶ崎市中海岸4-12986-52",
-        style: "インドア・半屋内席OK",
+        style: "インドア席・屋根あり席OK",
         parking: "施設Pあり",
         pants: "任意",
-        highlight: "海が目の前の絶景ロケーション",
+        highlight: "目の前がサザンビーチ",
         url: "https://www.google.com/maps/search/?api=1&query=サザンビーチカフェ+茅ヶ崎市中海岸",
-        note: "サザンビーチ目の前。インドア席も愛犬同伴OKで、風の強い日や日差しが強い日も安心。"
+        note: "インドア席（屋根・囲いありエリア）も愛犬同伴OK。風の強い日や日差しが強い日も安心です。"
       },
       {
-        id: 10,
+        id: 8,
         name: "ZUSHI atelier cafe",
         area: "逗子",
         type: "sweet",
@@ -205,16 +187,16 @@
         note: "落ち着いた静かな空間。トイプードルとゆったりスイーツやお茶を楽しめる穴場カフェ。"
       },
       {
-        id: 11,
+        id: 9,
         name: "L'atelier Cocon（ラトリエ ココン）",
         area: "逗子",
-        type: "coffee",
+        type: "bread",
         categoryText: "ベーカリーカフェ",
         address: "逗子市新宿1-4-28",
-        style: "店内イートインOK",
+        style: "店内イートイン席OK",
         parking: "あり",
         pants: "任意",
-        highlight: "逗子海岸すぐそば",
+        highlight: "逗子海岸すぐそばのベーカリー",
         url: "https://www.google.com/maps/search/?api=1&query=ラトリエココン+逗子市新宿",
         note: "焼きたてパンが自慢の海近くベーカリー。朝のお散歩ついでに愛犬と店内でモーニング可能。"
       }
@@ -238,7 +220,6 @@
         card.className = "block bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-200/90 active:scale-[0.98] transition-all hover:shadow-md";
 
         card.innerHTML = `
-          <!-- 上部：カラフルなヘッダーバナー -->
           <div class="bg-gradient-to-r ${theme.gradient} px-3.5 py-2.5 flex items-center justify-between text-white">
             <div class="flex items-center space-x-2">
               <span class="text-xl bg-white/20 backdrop-blur rounded-full w-8 h-8 flex items-center justify-center">${theme.icon}</span>
@@ -247,22 +228,21 @@
                 <span class="text-xs font-bold">${spot.categoryText}</span>
               </div>
             </div>
-            <span class="text-[11px] font-bold bg-white text-slate-900 px-2.5 py-0.5 rounded-full shadow-sm">
-              マップ詳細 ↗
+            <span class="text-[11px] font-bold text-white/90">
+              📍 ${spot.area}
             </span>
           </div>
 
           <div class="p-3.5">
-            <!-- 店名 -->
-            <h2 class="text-base font-extrabold text-slate-900 leading-tight mb-1">
+            <h2 class="text-base font-extrabold text-slate-900 leading-tight mb-1 flex items-center gap-1">
               ${spot.name}
+              <span class="text-xs text-slate-400 font-normal">↗</span>
             </h2>
             
             <p class="text-[11px] text-slate-400 mb-3 flex items-center">
               📍 <span class="ml-1">${spot.address}</span>
             </p>
 
-            <!-- トイプー向けステータスグリッド -->
             <div class="grid grid-cols-3 gap-1.5 mb-3 bg-slate-50 p-2 rounded-xl border border-slate-100 text-center">
               <div class="p-1">
                 <span class="text-[9px] text-slate-400 font-bold block">店内スタイル</span>
@@ -278,7 +258,6 @@
               </div>
             </div>
 
-            <!-- おすすめポイント & メモ -->
             <div class="flex items-center gap-1.5 mb-2">
               <span class="text-[10px] font-bold bg-amber-50 text-amber-800 border border-amber-200 px-2 py-0.5 rounded-md">
                 ★ ${spot.highlight}
