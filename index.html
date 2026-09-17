@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <title>犬コロが入れる店</title>
   
-  <!-- PWA・スマホ全画面最適化 -->
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="犬コロ店" />
@@ -38,19 +37,36 @@
         </span>
       </div>
 
-      <!-- エリア切り替えタブ -->
-      <div class="px-3 pt-1 pb-2 flex space-x-2 overflow-x-auto hide-scrollbar" id="area-tabs">
-        <button onclick="changeArea('ALL')" class="tab-btn active shrink-0 text-xs px-3.5 py-1.5 rounded-full font-bold bg-slate-900 text-white shadow-sm transition">全エリア</button>
-        <button onclick="changeArea('鵠沼')" class="tab-btn shrink-0 text-xs px-3.5 py-1.5 rounded-full font-bold bg-white text-slate-600 border border-slate-200 transition">鵠沼</button>
-        <button onclick="changeArea('鎌倉')" class="tab-btn shrink-0 text-xs px-3.5 py-1.5 rounded-full font-bold bg-white text-slate-600 border border-slate-200 transition">鎌倉</button>
+      <!-- 検索バー -->
+      <div class="px-3 pb-2">
+        <div class="relative flex items-center">
+          <span class="absolute left-3 text-slate-400 text-xs">🔍</span>
+          <input 
+            type="text" 
+            id="search-input" 
+            oninput="handleSearch()" 
+            placeholder="店名・パスタ・パン・海・珈琲などで検索..." 
+            class="w-full bg-slate-100 text-xs text-slate-800 pl-8 pr-3 py-1.5 rounded-xl border border-slate-200/80 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:bg-white transition"
+          />
+        </div>
+      </div>
+
+      <!-- エリア切り替えタブ（保存済みタブ付き） -->
+      <div class="px-3 pb-2 flex space-x-1.5 overflow-x-auto hide-scrollbar" id="area-tabs">
+        <button onclick="changeArea('ALL')" class="tab-btn active shrink-0 text-xs px-3 py-1.5 rounded-full font-bold bg-slate-900 text-white shadow-sm transition">全エリア</button>
+        <button onclick="changeArea('鵠沼')" class="tab-btn shrink-0 text-xs px-3 py-1.5 rounded-full font-bold bg-white text-slate-600 border border-slate-200 transition">鵠沼</button>
         <button onclick="changeArea('藤沢')" class="tab-btn shrink-0 text-xs px-3.5 py-1.5 rounded-full font-bold bg-white text-slate-600 border border-slate-200 transition">藤沢</button>
-        <button onclick="changeArea('茅ヶ崎')" class="tab-btn shrink-0 text-xs px-3.5 py-1.5 rounded-full font-bold bg-white text-slate-600 border border-slate-200 transition">茅ヶ崎</button>
-        <button onclick="changeArea('逗子')" class="tab-btn shrink-0 text-xs px-3.5 py-1.5 rounded-full font-bold bg-white text-slate-600 border border-slate-200 transition">逗子</button>
-        <button onclick="changeArea('葉山')" class="tab-btn shrink-0 text-xs px-3.5 py-1.5 rounded-full font-bold bg-white text-slate-600 border border-slate-200 transition">葉山</button>
+        <button onclick="changeArea('茅ヶ崎')" class="tab-btn shrink-0 text-xs px-3 py-1.5 rounded-full font-bold bg-white text-slate-600 border border-slate-200 transition">茅ヶ崎</button>
+        <button onclick="changeArea('鎌倉')" class="tab-btn shrink-0 text-xs px-3 py-1.5 rounded-full font-bold bg-white text-slate-600 border border-slate-200 transition">鎌倉</button>
+        <button onclick="changeArea('逗子')" class="tab-btn shrink-0 text-xs px-3 py-1.5 rounded-full font-bold bg-white text-slate-600 border border-slate-200 transition">逗子</button>
+        <button onclick="changeArea('葉山')" class="tab-btn shrink-0 text-xs px-3 py-1.5 rounded-full font-bold bg-white text-slate-600 border border-slate-200 transition">葉山</button>
+        <button onclick="changeArea('FAV')" id="tab-fav" class="tab-btn shrink-0 text-xs px-3 py-1.5 rounded-full font-bold bg-rose-50 text-rose-600 border border-rose-200 transition flex items-center gap-1">
+          ❤️ 保存済
+        </button>
       </div>
 
       <!-- ワンタップ絞り込みフィルター -->
-      <div class="px-3 pb-2.5 flex space-x-1.5 overflow-x-auto hide-scrollbar border-t border-slate-100 pt-2" id="feature-filters">
+      <div class="px-3 pb-2 flex space-x-1.5 overflow-x-auto hide-scrollbar border-t border-slate-100 pt-2" id="feature-filters">
         <button onclick="toggleFilter('parking')" id="filter-parking" class="filter-chip text-[11px] px-2.5 py-1 rounded-lg font-bold bg-slate-100 text-slate-600 flex items-center gap-1 transition">
           🅿️ 駐車場あり
         </button>
@@ -66,7 +82,7 @@
     <!-- 件数表示 -->
     <div class="px-4 pt-3 pb-1 flex justify-between items-center text-xs text-slate-400 font-bold">
       <span id="spot-count">0件のお店</span>
-      <span class="text-[10px] text-slate-400">タップでGoogleマップへ</span>
+      <span class="text-[10px] text-slate-400">店名タップでGoogleマップ</span>
     </div>
 
     <!-- 店舗カード一覧リスト -->
@@ -77,7 +93,7 @@
       <div class="p-3 bg-slate-100 rounded-xl border border-slate-200 text-xs text-slate-500">
         <p class="font-bold text-slate-700 mb-1">来店前のご注意</p>
         <p class="text-[11px] leading-relaxed">
-          営業時間や同伴ルールは天候等で変わる場合があります。来店前の電話確認をおすすめします。
+          同伴ルールや営業時間は変更される場合があります。来店前のお電話確認をおすすめします。
         </p>
       </div>
     </footer>
@@ -93,72 +109,73 @@
       bread:  { icon: "🥐", gradient: "from-orange-600 to-amber-600" }
     };
 
+    // 鵠沼・藤沢・茅ヶ崎を中心に大幅強化した店内同伴OK厳選リスト
     const SPOTS = [
       {
-        id: 1,
-        name: "7325coffee（ナミニココーヒー）",
+        id: 101,
+        name: "Cafe&Diner Belice（ベリーチェ）",
         area: "鵠沼",
-        type: "coffee",
-        categoryText: "自家焙煎珈琲・スイーツ",
-        address: "藤沢市鵠沼海岸1-9-17",
-        hours: "9:00〜18:00",
-        closed: "火曜定休（不定休あり）",
-        seatType: "全席OK・ゆったり",
+        type: "diner",
+        categoryText: "ドッグダイナー・洋食",
+        address: "藤沢市本鵠沼3-12-29",
+        hours: "11:30〜22:00（月火は17:00まで）",
+        closed: "水曜・第1第3木曜",
+        seatType: "全席OK・ソファーあり",
         hasParking: true,
-        parkingText: "あり（2台）",
+        parkingText: "あり（4台）",
         canChair: true,
-        styleText: "マットで椅子 / 足元OK",
-        hasDogMenu: false,
+        styleText: "ソファー・椅子（マット持参）",
+        hasDogMenu: true,
         waterService: true,
         pantsText: "任意（マナー重視）",
-        highlight: "鵠沼海岸駅前・海散歩の定番",
-        rainFeature: "駅近で小雨でも駆け込める・マット持参推奨",
-        url: "https://www.google.com/maps/search/?api=1&query=7325coffee+藤沢市鵠沼海岸1丁目",
-        note: "ウッド調の温かい店内。店主さんも大の犬好きでトイプー大歓迎。散歩帰りに本格珈琲が楽しめます。"
+        highlight: "名物わんこバーグ＆広々ソファー",
+        rainFeature: "店舗横に無料駐車場あり・雨天ドライブに最適",
+        url: "https://www.google.com/maps/search/?api=1&query=Cafe&Diner+Belice+藤沢市本鵠沼",
+        note: "愛犬家御用達の人気店。小型犬用ハンバーグや季節のフォトブース完備。男性も満足の本格洋食。"
       },
       {
-        id: 2,
-        name: "Cafe Grand-Mere（グランメール）",
-        area: "鎌倉",
-        type: "dining",
-        categoryText: "老舗洋食・喫茶",
-        address: "鎌倉市雪ノ下1-8-36 津脇ビル2F",
-        hours: "11:30〜17:00",
+        id: 102,
+        name: "DOG DEPT CAFE 湘南江ノ島店",
+        area: "鵠沼",
+        type: "diner",
+        categoryText: "ドッグカフェ・レストラン",
+        address: "藤沢市鵠沼海岸1-6-14",
+        hours: "11:00〜18:00（土日祝19:00）",
         closed: "水曜定休",
-        seatType: "テーブル席同伴OK",
-        hasParking: false,
-        parkingText: "なし（近隣P）",
+        seatType: "全席店内OK",
+        hasParking: true,
+        parkingText: "あり（提携・専用）",
         canChair: true,
-        styleText: "キャリー / マットで椅子",
-        hasDogMenu: false,
-        waterService: false,
+        styleText: "椅子OK・床OK・カートOK",
+        hasDogMenu: true,
+        waterService: true,
         pantsText: "任意",
-        highlight: "雨の日の小町通りで重宝",
-        rainFeature: "完全屋内2Fのため雨風ゼロ・階段あり",
-        url: "https://www.google.com/maps/search/?api=1&query=グランメール+鎌倉市雪ノ下1丁目8-36",
-        note: "小町通りの路地裏ビル2F。悪天候でも落ち着いてトイプーと名物オムライスや洋食ランチを味わえます。"
+        highlight: "海目の前・ドッグラン併設",
+        rainFeature: "完全屋内店舗で雨風・荒天も安心",
+        url: "https://www.google.com/maps/search/?api=1&query=DOG+DEPT+CAFE+湘南江ノ島店",
+        note: "江ノ島水族館・鵠沼海岸前。犬用メニューが豊富でトイプーグッズも揃う安心の直営カフェ。"
       },
       {
-        id: 3,
-        name: "café蕾（カフェ ツボミ）",
-        area: "鎌倉",
-        type: "sweet",
-        categoryText: "古民家和カフェ・甘味",
-        address: "鎌倉市長谷2-13-37",
-        hours: "11:00〜17:00",
-        closed: "不定休",
-        seatType: "一部店内席OK",
+        id: 103,
+        name: "Cafe Corte（カフェ コルテ）",
+        area: "藤沢",
+        type: "coffee",
+        categoryText: "カフェ・ランチ",
+        address: "藤沢市本町3-17-21",
+        hours: "11:00〜18:00",
+        closed: "日・月・祝日定休",
+        seatType: "店内テーブル席同伴OK",
         hasParking: false,
-        parkingText: "なし（近隣P）",
-        canChair: false,
-        styleText: "足元 / 抱っこ",
+        parkingText: "なし（近隣コインP）",
+        canChair: true,
+        styleText: "マットで椅子 / バッグ",
         hasDogMenu: false,
-        waterService: false,
+        waterService: true,
         pantsText: "任意",
-        highlight: "長谷寺・由比ヶ浜散策の休憩",
-        rainFeature: "軒先あり・足拭きタオルがあると安心",
-        url: "https://www.google.com/maps/search/?api=1&query=カフェ蕾+鎌倉市長谷2丁目",
-        note: "風情ある古民家でくずきりや和スイーツを。静かに落ち着いて過ごしたい愛犬家に人気のスポットです。"
+        highlight: "藤沢本町駅近くのアットホームカフェ",
+        rainFeature: "落ち着いた店内でゆったりランチ",
+        url: "https://www.google.com/maps/search/?api=1&query=Cafe+Corte+藤沢市本町",
+        note: "手作りケーキやヘルシーなランチが美味しく、地元愛犬家が散歩途中に立ち寄る隠れ家カフェ。"
       },
       {
         id: 4,
@@ -180,7 +197,7 @@
         highlight: "藤沢駅南口から徒歩3分",
         rainFeature: "駅チカで立ち寄りやすい",
         url: "https://www.google.com/maps/search/?api=1&query=soundwave+coffee+roasters+藤沢市",
-        note: "こだわりの自家焙煎コーヒー専門店。駅近でトイプーと店内で一息つける貴重なコーヒースタンド。"
+        note: "自家焙煎スペシャルティコーヒー専門店。駅近でトイプーと店内で一息つける貴重なスポット。"
       },
       {
         id: 5,
@@ -203,6 +220,50 @@
         rainFeature: "落ち着いた店内で雨の夜も安心",
         url: "https://www.google.com/maps/search/?api=1&query=SAJI+藤沢市鵠沼石上2丁目",
         note: "自然派ワインとお料理が美味しい大人の隠れ家ビストロ。夜に愛犬と一緒に食事できる嬉しいお店。"
+      },
+      {
+        id: 201,
+        name: "cafe Lu（カフェ ルー）",
+        area: "茅ヶ崎",
+        type: "sweet",
+        categoryText: "パンケーキ＆ドッグカフェ",
+        address: "茅ヶ崎市東海岸南4-11-39-4",
+        hours: "平日11:00〜19:00 / 土日10:00〜18:00",
+        closed: "月曜・隔週木曜",
+        seatType: "店内全席同伴OK",
+        hasParking: true,
+        parkingText: "あり（2台・予約不可）",
+        canChair: true,
+        styleText: "マットで椅子OK / カート",
+        hasDogMenu: true,
+        waterService: true,
+        pantsText: "任意（マナー重視）",
+        highlight: "海近く・無添加パンケーキが名物",
+        rainFeature: "店内全席ペットOKで雨の日も大歓迎",
+        url: "https://www.google.com/maps/search/?api=1&query=cafe+Lu+茅ヶ崎市東海岸南",
+        note: "一軒家のドッグフレンドリーカフェ。ワンコ専用メニューがあり、トイプードル連れに大人気。"
+      },
+      {
+        id: 202,
+        name: "MOKICHI FOODS GARDEN",
+        area: "茅ヶ崎",
+        type: "dining",
+        categoryText: "ピッツァ・クラフトビール",
+        address: "茅ヶ崎市元町13-1",
+        hours: "11:30〜21:30（L.O.20:30）",
+        closed: "火曜定休（祝日営業）",
+        seatType: "店内専用席4席（※電話予約必須）",
+        hasParking: true,
+        parkingText: "あり（提携大型Pあり）",
+        canChair: true,
+        styleText: "店内専用席・マット/足元",
+        hasDogMenu: false,
+        waterService: true,
+        pantsText: "任意",
+        highlight: "元精麦工場の大空間・絶品石窯ピザ",
+        rainFeature: "広い建物内で雨風を完全シャットアウト",
+        url: "https://www.google.com/maps/search/?api=1&query=MOKICHI+FOODS+GARDEN+茅ヶ崎",
+        note: "熊澤酒造直営。店内のペット同伴席は限定4席のみ（必ず事前に電話予約してください）。"
       },
       {
         id: 6,
@@ -247,6 +308,72 @@
         rainFeature: "広い屋根・囲い席で強風・雨もガード",
         url: "https://www.google.com/maps/search/?api=1&query=サザンビーチカフェ+茅ヶ崎市中海岸",
         note: "半屋内席・インドア席が充実。愛犬用のお水や専用メニューもあり、雨の日も賑わう人気店です。"
+      },
+      {
+        id: 2,
+        name: "Cafe Grand-Mere（グランメール）",
+        area: "鎌倉",
+        type: "dining",
+        categoryText: "老舗洋食・喫茶",
+        address: "鎌倉市雪ノ下1-8-36 津脇ビル2F",
+        hours: "11:30〜17:00",
+        closed: "水曜定休",
+        seatType: "テーブル席同伴OK",
+        hasParking: false,
+        parkingText: "なし（近隣P）",
+        canChair: true,
+        styleText: "キャリー / マットで椅子",
+        hasDogMenu: false,
+        waterService: false,
+        pantsText: "任意",
+        highlight: "雨の日の小町通りで重宝",
+        rainFeature: "完全屋内2Fのため雨風ゼロ・階段あり",
+        url: "https://www.google.com/maps/search/?api=1&query=グランメール+鎌倉市雪ノ下1丁目8-36",
+        note: "小町通りの路地裏ビル2F。悪天候でも落ち着いてトイプーと名物オムライスや洋食ランチを味わえます。"
+      },
+      {
+        id: 301,
+        name: "The Pass（ザ パス）",
+        area: "鎌倉",
+        type: "coffee",
+        categoryText: "コーヒースタンド＆ベイク",
+        address: "鎌倉市長谷1-15-10",
+        hours: "9:00〜17:00",
+        closed: "不定休",
+        seatType: "店内席・カウンター同伴OK",
+        hasParking: false,
+        parkingText: "なし（近隣コインP）",
+        canChair: true,
+        styleText: "抱っこ / マットで椅子",
+        hasDogMenu: false,
+        waterService: true,
+        pantsText: "任意",
+        highlight: "長谷の路地裏・新オープン",
+        rainFeature: "店内で温かいコーヒーと焼菓子",
+        url: "https://www.google.com/maps/search/?api=1&query=The+Pass+鎌倉市長谷",
+        note: "長谷寺近くに新しく誕生したドッグフレンドリーカフェ。店内で愛犬と一緒にこだわりのコーヒーが楽しめます。"
+      },
+      {
+        id: 3,
+        name: "café蕾（カフェ ツボミ）",
+        area: "鎌倉",
+        type: "sweet",
+        categoryText: "古民家和カフェ・甘味",
+        address: "鎌倉市長谷2-13-37",
+        hours: "11:00〜17:00",
+        closed: "不定休",
+        seatType: "一部店内席OK",
+        hasParking: false,
+        parkingText: "なし（近隣P）",
+        canChair: false,
+        styleText: "足元 / 抱っこ",
+        hasDogMenu: false,
+        waterService: false,
+        pantsText: "任意",
+        highlight: "長谷寺・由比ヶ浜散策の休憩",
+        rainFeature: "軒先あり・足拭きタオルがあると安心",
+        url: "https://www.google.com/maps/search/?api=1&query=カフェ蕾+鎌倉市長谷2丁目",
+        note: "風情ある古民家でくずきりや和スイーツを。静かに落ち着いて過ごしたい愛犬家に人気のスポットです。"
       },
       {
         id: 8,
@@ -339,11 +466,39 @@
     ];
 
     let currentArea = 'ALL';
+    let searchQuery = '';
     let filters = {
       parking: false,
       chair: false,
       dogMenu: false
     };
+
+    // お気に入り管理（ローカルストレージ保存）
+    function getFavorites() {
+      try {
+        return JSON.parse(localStorage.getItem('inukoro_favs') || '[]');
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function toggleFavorite(id, event) {
+      event.preventDefault();
+      event.stopPropagation();
+      let favs = getFavorites();
+      if (favs.includes(id)) {
+        favs = favs.filter(item => item !== id);
+      } else {
+        favs.push(id);
+      }
+      localStorage.setItem('inukoro_favs', JSON.stringify(favs));
+      renderList();
+    }
+
+    function handleSearch() {
+      searchQuery = document.getElementById('search-input').value.trim().toLowerCase();
+      renderList();
+    }
 
     function toggleFilter(key) {
       filters[key] = !filters[key];
@@ -361,22 +516,44 @@
     function renderList() {
       const container = document.getElementById('spot-list');
       container.innerHTML = '';
+      const favs = getFavorites();
 
-      let filtered = currentArea === 'ALL' ? SPOTS : SPOTS.filter(s => s.area === currentArea);
+      let filtered = SPOTS;
 
+      // エリアまたは保存済みの切り替え
+      if (currentArea === 'FAV') {
+        filtered = filtered.filter(s => favs.includes(s.id));
+      } else if (currentArea !== 'ALL') {
+        filtered = filtered.filter(s => s.area === currentArea);
+      }
+
+      // クイックフィルター
       if (filters.parking) filtered = filtered.filter(s => s.hasParking);
       if (filters.chair) filtered = filtered.filter(s => s.canChair);
       if (filters.dogMenu) filtered = filtered.filter(s => s.hasDogMenu);
 
+      // フリーワード検索
+      if (searchQuery) {
+        filtered = filtered.filter(s => {
+          const target = (s.name + s.area + s.categoryText + s.address + s.highlight + s.note + s.rainFeature).toLowerCase();
+          return target.includes(searchQuery);
+        });
+      }
+
       document.getElementById('spot-count').innerText = `${filtered.length}件のお店`;
 
       if (filtered.length === 0) {
-        container.innerHTML = `<div class="text-center py-12 text-slate-400 text-xs">該当する条件のお店が見つかりませんでした</div>`;
+        container.innerHTML = `
+          <div class="text-center py-16 text-slate-400 text-xs">
+            <span class="text-3xl block mb-2">🐾</span>
+            該当するお店が見つかりませんでした
+          </div>`;
         return;
       }
 
       filtered.forEach(spot => {
         const theme = CATEGORY_STYLES[spot.type] || CATEGORY_STYLES.coffee;
+        const isFav = favs.includes(spot.id);
 
         const card = document.createElement('a');
         card.href = spot.url;
@@ -397,17 +574,26 @@
                 <span class="text-xs font-bold">${spot.categoryText}</span>
               </div>
             </div>
-            <span class="text-xs font-bold bg-black/20 backdrop-blur px-2.5 py-0.5 rounded-full text-white/90">
-              ${spot.area}
-            </span>
+            
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-bold bg-black/20 backdrop-blur px-2.5 py-0.5 rounded-full text-white/90">
+                ${spot.area}
+              </span>
+              <!-- お気に入り保存ハートボタン -->
+              <button 
+                onclick="toggleFavorite(${spot.id}, event)" 
+                class="w-7 h-7 rounded-full bg-white/90 backdrop-blur flex items-center justify-center shadow-sm text-sm active:scale-125 transition"
+                title="お気に入りに追加"
+              >
+                ${isFav ? '❤️' : '🤍'}
+              </button>
+            </div>
           </div>
 
           <div class="p-3.5">
-            <div class="flex items-start justify-between mb-1">
-              <h2 class="text-base font-extrabold text-slate-900 leading-tight">
-                ${spot.name}
-              </h2>
-            </div>
+            <h2 class="text-base font-extrabold text-slate-900 leading-tight mb-1">
+              ${spot.name}
+            </h2>
             
             <p class="text-[11px] text-slate-400 mb-2 flex items-center">
               📍 <span class="ml-1">${spot.address}</span>
@@ -460,10 +646,20 @@
       currentArea = area;
 
       document.querySelectorAll('.tab-btn').forEach(btn => {
-        if ((area === 'ALL' && btn.innerText === '全エリア') || btn.innerText === area) {
-          btn.className = 'tab-btn active shrink-0 text-xs px-3.5 py-1.5 rounded-full font-bold bg-slate-900 text-white shadow-sm transition';
+        if ((area === 'ALL' && btn.innerText === '全エリア') || 
+            (area === 'FAV' && btn.id === 'tab-fav') || 
+            btn.innerText === area) {
+          if (area === 'FAV') {
+            btn.className = 'tab-btn shrink-0 text-xs px-3 py-1.5 rounded-full font-bold bg-rose-600 text-white shadow-sm transition flex items-center gap-1';
+          } else {
+            btn.className = 'tab-btn active shrink-0 text-xs px-3.5 py-1.5 rounded-full font-bold bg-slate-900 text-white shadow-sm transition';
+          }
         } else {
-          btn.className = 'tab-btn shrink-0 text-xs px-3.5 py-1.5 rounded-full font-bold bg-white text-slate-600 border border-slate-200 transition';
+          if (btn.id === 'tab-fav') {
+            btn.className = 'tab-btn shrink-0 text-xs px-3 py-1.5 rounded-full font-bold bg-rose-50 text-rose-600 border border-rose-200 transition flex items-center gap-1';
+          } else {
+            btn.className = 'tab-btn shrink-0 text-xs px-3.5 py-1.5 rounded-full font-bold bg-white text-slate-600 border border-slate-200 transition';
+          }
         }
       });
 
@@ -471,7 +667,6 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // 初回初期化
     renderList();
   </script>
 </body>
