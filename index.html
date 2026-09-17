@@ -29,7 +29,7 @@
           <span class="text-2xl animate-bounce">🐩</span>
           <div>
             <h1 class="text-base font-extrabold text-slate-900 tracking-tight leading-none">犬コロが入れる店</h1>
-            <span class="text-[10px] text-slate-400 font-bold">湘南・店内同伴OK限定</span>
+            <span class="text-[10px] text-slate-400 font-bold">湘南・西湘 店内同伴OK限定</span>
           </div>
         </div>
         <span class="text-[11px] font-bold bg-amber-500 text-white px-2.5 py-1 rounded-full shadow-sm">
@@ -45,13 +45,13 @@
             type="text" 
             id="search-input" 
             oninput="handleSearch()" 
-            placeholder="店名・パスタ・パン・海・珈琲などで検索..." 
+            placeholder="店名・パスタ・海鮮・パン・珈琲などで検索..." 
             class="w-full bg-slate-100 text-xs text-slate-800 pl-8 pr-3 py-1.5 rounded-xl border border-slate-200/80 focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:bg-white transition"
           />
         </div>
       </div>
 
-      <!-- エリア切り替えタブ -->
+      <!-- エリア切り替えタブ（小田原を追加） -->
       <div class="px-3 pb-2 flex space-x-1.5 overflow-x-auto hide-scrollbar" id="area-tabs">
         <button onclick="changeArea('ALL')" class="tab-btn active shrink-0 text-xs px-3.5 py-1.5 rounded-full font-bold bg-slate-900 text-white shadow-sm transition">全エリア</button>
         <button onclick="changeArea('鵠沼')" class="tab-btn shrink-0 text-xs px-3.5 py-1.5 rounded-full font-bold bg-white text-slate-600 border border-slate-200 transition">鵠沼</button>
@@ -60,6 +60,7 @@
         <button onclick="changeArea('鎌倉')" class="tab-btn shrink-0 text-xs px-3.5 py-1.5 rounded-full font-bold bg-white text-slate-600 border border-slate-200 transition">鎌倉</button>
         <button onclick="changeArea('逗子')" class="tab-btn shrink-0 text-xs px-3.5 py-1.5 rounded-full font-bold bg-white text-slate-600 border border-slate-200 transition">逗子</button>
         <button onclick="changeArea('葉山')" class="tab-btn shrink-0 text-xs px-3.5 py-1.5 rounded-full font-bold bg-white text-slate-600 border border-slate-200 transition">葉山</button>
+        <button onclick="changeArea('小田原')" class="tab-btn shrink-0 text-xs px-3.5 py-1.5 rounded-full font-bold bg-white text-slate-600 border border-slate-200 transition">小田原</button>
         <button onclick="changeArea('FAV')" id="tab-fav" class="tab-btn shrink-0 text-xs px-3.5 py-1.5 rounded-full font-bold bg-rose-50 text-rose-600 border border-rose-200 transition flex items-center gap-1">
           ❤️ 保存済
         </button>
@@ -79,11 +80,11 @@
       </div>
     </header>
 
-    <!-- 件数表示（ルート案内誘導） -->
+    <!-- 件数表示 -->
     <div class="px-4 pt-3 pb-1 flex justify-between items-center text-xs text-slate-400 font-bold">
       <span id="spot-count">0件のお店</span>
       <span class="text-[10px] text-amber-700 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full flex items-center gap-0.5">
-        🚗 タップで現在地からのルート案内起動
+        🚗 タップで現在地からのナビ直行
       </span>
     </div>
 
@@ -104,14 +105,14 @@
 
   <script>
     const CATEGORY_STYLES = {
-      coffee: { icon: "☕", gradient: "from-amber-600 to-yellow-600" },
-      diner:  { icon: "🍔", gradient: "from-sky-600 to-indigo-600" },
-      dining: { icon: "🍷", gradient: "from-rose-600 to-pink-600" },
-      sweet:  { icon: "🍦", gradient: "from-emerald-600 to-teal-600" },
-      bread:  { icon: "🥐", gradient: "from-orange-600 to-amber-600" }
+      coffee:  { icon: "☕", gradient: "from-amber-600 to-yellow-600" },
+      diner:   { icon: "🍔", gradient: "from-sky-600 to-indigo-600" },
+      dining:  { icon: "🍷", gradient: "from-rose-600 to-pink-600" },
+      sweet:   { icon: "🍦", gradient: "from-emerald-600 to-teal-600" },
+      bread:   { icon: "🥐", gradient: "from-orange-600 to-amber-600" },
+      seafood: { icon: "🐟", gradient: "from-cyan-600 to-blue-700" }
     };
 
-    // destinationパラメータで直接「現在地からのルート案内」を起動するURLに設定
     const SPOTS = [
       {
         id: 101,
@@ -464,6 +465,73 @@
         rainFeature: "土間席は雨でも風情ある景色を堪能",
         url: "https://www.google.com/maps/dir/?api=1&destination=engawa+cafe+葉山町一色1664-1",
         note: "歴史ある古民家の土間スペースでトイプーと同伴OK。三浦野菜を使った優しいランチが大人気。"
+      },
+      // 小田原エリア
+      {
+        id: 401,
+        name: "dog cafe moi moi（モイモイ）",
+        area: "小田原",
+        type: "diner",
+        categoryText: "ドッグカフェ・ランチ",
+        address: "小田原市飯泉740-1",
+        hours: "11:30〜17:00（金土日祝ディナー予約制）",
+        closed: "火曜・水曜・第3木曜",
+        seatType: "店内全席同伴OK（特製マット有）",
+        hasParking: true,
+        parkingText: "あり（8台）",
+        canChair: true,
+        styleText: "ペットチェアー・マットで椅子",
+        hasDogMenu: true,
+        waterService: true,
+        pantsText: "男の子着用必須",
+        highlight: "手作りわんこメニュー＆フォトブース",
+        rainFeature: "二重扉と広い駐車場で雨の日も快適",
+        url: "https://www.google.com/maps/dir/?api=1&destination=dog+cafe+moi+moi+小田原市飯泉740-1",
+        note: "愛犬専用ペンションを営んでいたオーナーの本格ドッグカフェ。犬用手作りガレットやハンバーグが大人気。"
+      },
+      {
+        id: 402,
+        name: "ふるはうす（早川港）",
+        area: "小田原",
+        type: "seafood",
+        categoryText: "海鮮丼・地魚料理",
+        address: "小田原市早川1-4-17",
+        hours: "11:00〜16:00（土日祝18:00まで）",
+        closed: "不定休",
+        seatType: "店内一部席・テラス同伴OK",
+        hasParking: true,
+        parkingText: "あり（漁港・店舗近隣P）",
+        canChair: true,
+        styleText: "バッグ / カート / 足元",
+        hasDogMenu: true,
+        waterService: true,
+        pantsText: "任意",
+        highlight: "小田原早川港近くで新鮮な海鮮丼",
+        rainFeature: "店内一部席で雨天時も海鮮ランチ可能",
+        url: "https://www.google.com/maps/dir/?api=1&destination=ふるはうす+小田原市早川1丁目4-17",
+        note: "魚屋さん直営の海鮮丼＆肉厚アジフライのお店。犬連れで店内席を利用できる大変貴重な海鮮スポット。"
+      },
+      {
+        id: 403,
+        name: "ドッグカフェ COCORURU（ココルル）",
+        area: "小田原",
+        type: "diner",
+        categoryText: "ドッグカフェ・喫茶",
+        address: "小田原市寿町5-16-1",
+        hours: "11:00〜17:00",
+        closed: "月曜・火曜定休",
+        seatType: "店内全席ペット同伴OK",
+        hasParking: true,
+        parkingText: "あり（店舗前・横）",
+        canChair: true,
+        styleText: "マットで椅子 / 足元",
+        hasDogMenu: true,
+        waterService: true,
+        pantsText: "マナーパンツ着用推奨",
+        highlight: "アットホームな地元愛犬家憩いの場",
+        rainFeature: "駐車場からすぐ店内へ入れる安心設計",
+        url: "https://www.google.com/maps/dir/?api=1&destination=ドッグカフェCOCORURU+小田原市寿町",
+        note: "気さくな雰囲気でトイプー連れでも気兼ねなく過ごせるドッグカフェ。ワンちゃん用のおやつ・食事あり。"
       }
     ];
 
@@ -592,8 +660,9 @@
               <h2 class="text-base font-extrabold text-slate-900 leading-tight">
                 ${spot.name}
               </h2>
-              <span class="text-[11px] font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded flex items-center gap-0.5 shrink-0">
-                ルート案内 ➔
+              <!-- シンプルで邪魔にならないコンパクトナビバッジ -->
+              <span class="text-[10px] font-extrabold text-amber-700 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-md flex items-center gap-0.5 shrink-0 shadow-xs">
+                🚗 ナビ起動
               </span>
             </div>
             
@@ -652,7 +721,7 @@
             (area === 'FAV' && btn.id === 'tab-fav') || 
             btn.innerText === area) {
           if (area === 'FAV') {
-            btn.className = 'tab-btn shrink-0 text-xs px-3 py-1.5 rounded-full font-bold bg-rose-600 text-white shadow-sm transition flex items-center gap-1';
+            btn.className = 'tab-btn shrink-0 text-xs px-3.5 py-1.5 rounded-full font-bold bg-rose-600 text-white shadow-sm transition flex items-center gap-1';
           } else {
             btn.className = 'tab-btn active shrink-0 text-xs px-3.5 py-1.5 rounded-full font-bold bg-slate-900 text-white shadow-sm transition';
           }
