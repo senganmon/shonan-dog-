@@ -37,8 +37,8 @@
         </span>
       </div>
 
-      <!-- エリア切り替えタブ（葉山を追加） -->
-      <div class="px-3 pb-2.5 flex space-x-2 overflow-x-auto hide-scrollbar" id="area-tabs">
+      <!-- エリア切り替えタブ -->
+      <div class="px-3 pt-1 pb-2 flex space-x-2 overflow-x-auto hide-scrollbar" id="area-tabs">
         <button onclick="changeArea('ALL')" class="tab-btn active shrink-0 text-xs px-3.5 py-1.5 rounded-full font-bold bg-slate-900 text-white shadow-sm transition">全エリア</button>
         <button onclick="changeArea('鵠沼')" class="tab-btn shrink-0 text-xs px-3.5 py-1.5 rounded-full font-bold bg-white text-slate-600 border border-slate-200 transition">鵠沼</button>
         <button onclick="changeArea('鎌倉')" class="tab-btn shrink-0 text-xs px-3.5 py-1.5 rounded-full font-bold bg-white text-slate-600 border border-slate-200 transition">鎌倉</button>
@@ -47,7 +47,26 @@
         <button onclick="changeArea('逗子')" class="tab-btn shrink-0 text-xs px-3.5 py-1.5 rounded-full font-bold bg-white text-slate-600 border border-slate-200 transition">逗子</button>
         <button onclick="changeArea('葉山')" class="tab-btn shrink-0 text-xs px-3.5 py-1.5 rounded-full font-bold bg-white text-slate-600 border border-slate-200 transition">葉山</button>
       </div>
+
+      <!-- ワンタップ絞り込みフィルター -->
+      <div class="px-3 pb-2.5 flex space-x-1.5 overflow-x-auto hide-scrollbar border-t border-slate-100 pt-2" id="feature-filters">
+        <button onclick="toggleFilter('parking')" id="filter-parking" class="filter-chip text-[11px] px-2.5 py-1 rounded-lg font-bold bg-slate-100 text-slate-600 flex items-center gap-1 transition">
+          🅿️ 駐車場あり
+        </button>
+        <button onclick="toggleFilter('chair')" id="filter-chair" class="filter-chip text-[11px] px-2.5 py-1 rounded-lg font-bold bg-slate-100 text-slate-600 flex items-center gap-1 transition">
+          🪑 椅子OK
+        </button>
+        <button onclick="toggleFilter('dogMenu')" id="filter-dogMenu" class="filter-chip text-[11px] px-2.5 py-1 rounded-lg font-bold bg-slate-100 text-slate-600 flex items-center gap-1 transition">
+          🍖 犬メニューあり
+        </button>
+      </div>
     </header>
+
+    <!-- 件数表示 -->
+    <div class="px-4 pt-3 pb-1 flex justify-between items-center text-xs text-slate-400 font-bold">
+      <span id="spot-count">0件のお店</span>
+      <span class="text-[10px] text-slate-400">タップでGoogleマップへ</span>
+    </div>
 
     <!-- 店舗カード一覧リスト -->
     <main class="flex-1 p-3.5 space-y-3.5" id="spot-list"></main>
@@ -57,7 +76,7 @@
       <div class="p-3 bg-slate-100 rounded-xl border border-slate-200 text-xs text-slate-500">
         <p class="font-bold text-slate-700 mb-1">来店前のご注意</p>
         <p class="text-[11px] leading-relaxed">
-          店舗の同伴ルールは変更される場合があります。来店前にお電話等での事前確認をおすすめします。
+          営業時間や同伴ルールは天候等で変わる場合があります。来店前の電話確認をおすすめします。
         </p>
       </div>
     </footer>
@@ -81,12 +100,20 @@
         type: "coffee",
         categoryText: "自家焙煎珈琲・スイーツ",
         address: "藤沢市鵠沼海岸1-9-17",
-        style: "椅子（マット） / 床OK",
-        parking: "あり",
-        pants: "任意（マナー重視）",
+        hours: "9:00〜18:00",
+        closed: "火曜定休（不定休あり）",
+        seatType: "全席OK・ゆったり",
+        hasParking: true,
+        parkingText: "あり（2台）",
+        canChair: true,
+        styleText: "マットで椅子 / 足元OK",
+        hasDogMenu: false,
+        waterService: true,
+        pantsText: "任意（マナー重視）",
         highlight: "鵠沼海岸駅前・海散歩の定番",
+        rainFeature: "駅近で小雨でも駆け込める・マット持参推奨",
         url: "https://www.google.com/maps/search/?api=1&query=7325coffee+藤沢市鵠沼海岸1丁目",
-        note: "ウッド調の落ち着く空間。店主さんも犬好きでトイプー大歓迎。カフェマット持参推奨です。"
+        note: "ウッド調の温かい店内。店主さんも大の犬好きでトイプー大歓迎。散歩帰りに本格珈琲が楽しめます。"
       },
       {
         id: 2,
@@ -95,26 +122,42 @@
         type: "dining",
         categoryText: "老舗洋食・喫茶",
         address: "鎌倉市雪ノ下1-8-36 津脇ビル2F",
-        style: "バッグ / マットで椅子OK",
-        parking: "なし",
-        pants: "任意",
+        hours: "11:30〜17:00",
+        closed: "水曜定休",
+        seatType: "テーブル席同伴OK",
+        hasParking: false,
+        parkingText: "なし（近隣P）",
+        canChair: true,
+        styleText: "キャリー / マットで椅子",
+        hasDogMenu: false,
+        waterService: false,
+        pantsText: "任意",
         highlight: "雨の日の小町通りで重宝",
+        rainFeature: "完全屋内2Fのため雨風ゼロ・階段あり",
         url: "https://www.google.com/maps/search/?api=1&query=グランメール+鎌倉市雪ノ下1丁目8-36",
-        note: "小町通りの路地裏2F。雨風を完全に防げる店内で、トイプーと一緒に本格洋食が楽しめます。"
+        note: "小町通りの路地裏ビル2F。悪天候でも落ち着いてトイプーと名物オムライスや洋食ランチを味わえます。"
       },
       {
         id: 3,
         name: "café蕾（カフェ ツボミ）",
         area: "鎌倉",
-        address: "鎌倉市長谷2-13-37",
         type: "sweet",
         categoryText: "古民家和カフェ・甘味",
-        style: "足元 / 抱っこ",
-        parking: "なし",
-        pants: "任意",
+        address: "鎌倉市長谷2-13-37",
+        hours: "11:00〜17:00",
+        closed: "不定休",
+        seatType: "一部店内席OK",
+        hasParking: false,
+        parkingText: "なし（近隣P）",
+        canChair: false,
+        styleText: "足元 / 抱っこ",
+        hasDogMenu: false,
+        waterService: false,
+        pantsText: "任意",
         highlight: "長谷寺・由比ヶ浜散策の休憩",
+        rainFeature: "軒先あり・足拭きタオルがあると安心",
         url: "https://www.google.com/maps/search/?api=1&query=カフェ蕾+鎌倉市長谷2丁目",
-        note: "風情ある古民家でくずきりや和スイーツを。静かにゆったり休憩したい時に最適です。"
+        note: "風情ある古民家でくずきりや和スイーツを。静かに落ち着いて過ごしたい愛犬家に人気のスポットです。"
       },
       {
         id: 4,
@@ -123,12 +166,20 @@
         type: "coffee",
         categoryText: "コーヒースタンド",
         address: "藤沢市鵠沼石上1-8-11",
-        style: "ベンチ席・足元OK",
-        parking: "なし",
-        pants: "任意",
+        hours: "10:00〜18:00",
+        closed: "月曜定休",
+        seatType: "スタンド内ベンチ席",
+        hasParking: false,
+        parkingText: "なし（駅前P）",
+        canChair: false,
+        styleText: "ベンチ横・足元OK",
+        hasDogMenu: false,
+        waterService: true,
+        pantsText: "任意",
         highlight: "藤沢駅南口から徒歩3分",
+        rainFeature: "駅チカで立ち寄りやすい",
         url: "https://www.google.com/maps/search/?api=1&query=soundwave+coffee+roasters+藤沢市",
-        note: "こだわりのスペシャリティコーヒー専門店。駅近で小型犬と店内に入れる貴重なスポット。"
+        note: "こだわりの自家焙煎コーヒー専門店。駅近でトイプーと店内で一息つける貴重なコーヒースタンド。"
       },
       {
         id: 5,
@@ -137,12 +188,20 @@
         type: "dining",
         categoryText: "ナチュラルワイン・ビストロ",
         address: "藤沢市鵠沼石上2-1-11",
-        style: "抱っこ / 足元",
-        parking: "なし",
-        pants: "任意",
+        hours: "17:00〜23:00（週末ランチあり）",
+        closed: "火曜・水曜定休",
+        seatType: "店内テーブル（予約推奨）",
+        hasParking: false,
+        parkingText: "なし（近隣P）",
+        canChair: true,
+        styleText: "抱っこ / 足元 / マット",
+        hasDogMenu: false,
+        waterService: true,
+        pantsText: "任意（マナー重視）",
         highlight: "夜もトイプーとディナーOK",
+        rainFeature: "落ち着いた店内で雨の夜も安心",
         url: "https://www.google.com/maps/search/?api=1&query=SAJI+藤沢市鵠沼石上2丁目",
-        note: "ワインと料理が評判の隠れ家ビストロ。店内で愛犬と一緒にディナーやお酒が楽しめます。"
+        note: "自然派ワインとお料理が美味しい大人の隠れ家ビストロ。夜に愛犬と一緒に食事できる嬉しいお店。"
       },
       {
         id: 6,
@@ -151,12 +210,20 @@
         type: "sweet",
         categoryText: "手作りアイス・ワッフル",
         address: "茅ヶ崎市東海岸北1-7-23",
-        style: "奥のイートイン席OK",
-        parking: "提携あり",
-        pants: "任意",
+        hours: "10:00〜21:00",
+        closed: "年中無休",
+        seatType: "奥のイートイン席OK",
+        hasParking: true,
+        parkingText: "提携駐車場あり",
+        canChair: true,
+        styleText: "抱っこ / 椅子（マット）",
+        hasDogMenu: false,
+        waterService: false,
+        pantsText: "任意",
         highlight: "茅ヶ崎の超有名アイス店",
+        rainFeature: "屋根付き入口・雨でもイートイン可",
         url: "https://www.google.com/maps/search/?api=1&query=プレンティーズ+茅ヶ崎本店",
-        note: "雄三通り沿い。店内奥のイートイン席でトイプーを抱っこして涼みながらアイスを食べられます。"
+        note: "雄三通り沿いの名物店。奥のイートインスペースでトイプーを抱っこしながらアイスを楽しめます。"
       },
       {
         id: 7,
@@ -165,12 +232,20 @@
         type: "diner",
         categoryText: "シーサイドダイナー",
         address: "茅ヶ崎市中海岸4-12986-52",
-        style: "インドア席・屋根あり席OK",
-        parking: "施設Pあり",
-        pants: "任意",
+        hours: "8:00〜21:00",
+        closed: "無休",
+        seatType: "インドア・屋根付き席多数",
+        hasParking: true,
+        parkingText: "施設Pあり（割引有）",
+        canChair: true,
+        styleText: "カート / マットで椅子OK",
+        hasDogMenu: true,
+        waterService: true,
+        pantsText: "任意",
         highlight: "目の前がサザンビーチ",
+        rainFeature: "広い屋根・囲い席で強風・雨もガード",
         url: "https://www.google.com/maps/search/?api=1&query=サザンビーチカフェ+茅ヶ崎市中海岸",
-        note: "インドア席（屋根・囲いありエリア）も愛犬同伴OK。風の強い日や日差しが強い日も安心です。"
+        note: "半屋内席・インドア席が充実。愛犬用のお水や専用メニューもあり、雨の日も賑わう人気店です。"
       },
       {
         id: 8,
@@ -179,12 +254,20 @@
         type: "sweet",
         categoryText: "カフェ・スイーツ",
         address: "逗子市逗子5-2-53",
-        style: "マットで椅子 / 抱っこ",
-        parking: "近隣コインP",
-        pants: "任意",
+        hours: "11:00〜18:00",
+        closed: "月曜・木曜定休",
+        seatType: "店内テーブル席OK",
+        hasParking: false,
+        parkingText: "なし（近隣コインP）",
+        canChair: true,
+        styleText: "マットで椅子 / 抱っこ",
+        hasDogMenu: false,
+        waterService: true,
+        pantsText: "任意",
         highlight: "逗子駅近くの静かな路地裏",
+        rainFeature: "静かで雨宿りティータイムに最適",
         url: "https://www.google.com/maps/search/?api=1&query=ZUSHI+atelier+cafe+逗子市",
-        note: "落ち着いた静かな空間。トイプードルとゆったりスイーツやお茶を楽しめる穴場カフェ。"
+        note: "逗子駅すぐの落ち着いたカフェ。トイプーと静かに手作りスイーツやコーヒーを味わえます。"
       },
       {
         id: 9,
@@ -193,12 +276,20 @@
         type: "bread",
         categoryText: "ベーカリーカフェ",
         address: "逗子市新宿1-4-28",
-        style: "店内イートイン席OK",
-        parking: "あり",
-        pants: "任意",
+        hours: "8:30〜17:00",
+        closed: "火曜・水曜定休",
+        seatType: "店内イートイン席OK",
+        hasParking: true,
+        parkingText: "専用あり（2台）",
+        canChair: true,
+        styleText: "マットで椅子 / カート",
+        hasDogMenu: false,
+        waterService: false,
+        pantsText: "任意",
         highlight: "逗子海岸すぐそばのベーカリー",
+        rainFeature: "店内で焼きたてパンモーニング可能",
         url: "https://www.google.com/maps/search/?api=1&query=ラトリエココン+逗子市新宿",
-        note: "焼きたてパンが自慢の海近くベーカリー。朝のお散歩ついでに愛犬と店内でモーニング可能。"
+        note: "逗子海岸近くのベーカリー。絶品の焼きたてパンを愛犬と一緒に店内でゆっくり味わえます。"
       },
       {
         id: 10,
@@ -207,12 +298,20 @@
         type: "coffee",
         categoryText: "自家焙煎スペシャルティ珈琲",
         address: "三浦郡葉山町一色2075",
-        style: "店内ベンチ・抱っこOK",
-        parking: "あり（2台）",
-        pants: "任意",
+        hours: "10:00〜18:00",
+        closed: "月曜・火曜定休",
+        seatType: "店内ベンチ・カウンター",
+        hasParking: true,
+        parkingText: "あり（2台）",
+        canChair: false,
+        styleText: "抱っこ / 足元OK",
+        hasDogMenu: false,
+        waterService: true,
+        pantsText: "任意",
         highlight: "一色海岸・御用邸近くの名店",
+        rainFeature: "ドライブ途中の立ち寄りにおすすめ",
         url: "https://www.google.com/maps/search/?api=1&query=THE+FIVE+BEANS+葉山町一色",
-        note: "一色海岸近くの人気ロースタリー。コーヒー豆の購入や店内のベンチで愛犬と一緒に淹れたてを味わえます。"
+        note: "一色海岸近くの名店ロースタリー。トイプーと一緒に店内で淹れたてのスペシャルティ珈琲を楽しめます。"
       },
       {
         id: 11,
@@ -221,22 +320,60 @@
         type: "dining",
         categoryText: "古民家カフェ・和食ランチ",
         address: "三浦郡葉山町一色1664-1",
-        style: "土間スペース店内OK",
-        parking: "あり",
-        pants: "任意（マナー配慮）",
+        hours: "11:30〜15:00",
+        closed: "月曜・火曜定休",
+        seatType: "土間スペース席（予約推奨）",
+        hasParking: true,
+        parkingText: "あり（4台）",
+        canChair: false,
+        styleText: "土間にマット / 抱っこ",
+        hasDogMenu: false,
+        waterService: false,
+        pantsText: "任意（マナー重視）",
         highlight: "昭和初期の趣ある旧別荘建築",
+        rainFeature: "土間席は雨でも風情ある景色を堪能",
         url: "https://www.google.com/maps/search/?api=1&query=engawa+cafe+葉山町一色",
-        note: "歴史ある古民家カフェ。土間スペース席はトイプードル等の小型犬同伴で店内の風情を楽しめます（予約推奨）。"
+        note: "歴史ある古民家の土間スペースでトイプーと同伴OK。三浦野菜を使った優しいランチが大人気。"
       }
     ];
 
     let currentArea = 'ALL';
+    let filters = {
+      parking: false,
+      chair: false,
+      dogMenu: false
+    };
+
+    function toggleFilter(key) {
+      filters[key] = !filters[key];
+      const btn = document.getElementById(`filter-${key}`);
+      
+      if (filters[key]) {
+        btn.className = "filter-chip active text-[11px] px-2.5 py-1 rounded-lg font-bold bg-amber-500 text-white shadow-sm flex items-center gap-1 transition";
+      } else {
+        btn.className = "filter-chip text-[11px] px-2.5 py-1 rounded-lg font-bold bg-slate-100 text-slate-600 flex items-center gap-1 transition";
+      }
+
+      renderList();
+    }
 
     function renderList() {
       const container = document.getElementById('spot-list');
       container.innerHTML = '';
 
-      const filtered = currentArea === 'ALL' ? SPOTS : SPOTS.filter(s => s.area === currentArea);
+      let filtered = currentArea === 'ALL' ? SPOTS : SPOTS.filter(s => s.area === currentArea);
+
+      // 条件絞り込み
+      if (filters.parking) filtered = filtered.filter(s => s.hasParking);
+      if (filters.chair) filtered = filtered.filter(s => s.canChair);
+      if (filters.dogMenu) filtered = filtered.filter(s => s.hasDogMenu);
+
+      document.getElementById('spot-count').innerText = `${filtered.length}件のお店`;
+
+      if (filtered.length === 0) {
+        container.innerHTML = `<div class="text-center py-12 text-slate-400 text-xs">該当する条件のお店が見つかりませんでした</div>`;
+        return;
+      }
 
       filtered.forEach(spot => {
         const theme = CATEGORY_STYLES[spot.type] || CATEGORY_STYLES.coffee;
@@ -246,6 +383,11 @@
         card.target = "_blank";
         card.rel = "noopener noreferrer";
         card.className = "block bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-200/90 active:scale-[0.98] transition-all hover:shadow-md";
+
+        // わんこサービスバッジ
+        let serviceBadges = '';
+        if (spot.hasDogMenu) serviceBadges += `<span class="text-[10px] font-bold bg-purple-50 text-purple-700 border border-purple-200 px-1.5 py-0.5 rounded">犬メニューあり</span>`;
+        if (spot.waterService) serviceBadges += `<span class="text-[10px] font-bold bg-sky-50 text-sky-700 border border-sky-200 px-1.5 py-0.5 rounded">お水サービス</span>`;
 
         card.innerHTML = `
           <div class="bg-gradient-to-r ${theme.gradient} px-3.5 py-2.5 flex items-center justify-between text-white">
@@ -262,34 +404,53 @@
           </div>
 
           <div class="p-3.5">
-            <h2 class="text-base font-extrabold text-slate-900 leading-tight mb-1 flex items-center gap-1">
-              ${spot.name}
-              <span class="text-xs text-slate-400 font-normal">↗</span>
-            </h2>
+            <!-- 店名 -->
+            <div class="flex items-start justify-between mb-1">
+              <h2 class="text-base font-extrabold text-slate-900 leading-tight flex items-center gap-1">
+                ${spot.name}
+                <span class="text-xs text-slate-400 font-normal">↗</span>
+              </h2>
+            </div>
             
-            <p class="text-[11px] text-slate-400 mb-3 flex items-center">
+            <p class="text-[11px] text-slate-400 mb-2 flex items-center">
               📍 <span class="ml-1">${spot.address}</span>
             </p>
 
-            <div class="grid grid-cols-3 gap-1.5 mb-3 bg-slate-50 p-2 rounded-xl border border-slate-100 text-center">
+            <!-- 営業時間・定休日 -->
+            <div class="flex items-center gap-2 text-[11px] text-slate-600 bg-slate-50 px-2.5 py-1.5 rounded-lg mb-3 border border-slate-100">
+              <span class="font-bold text-amber-700">🕒 ${spot.hours}</span>
+              <span class="text-slate-300">|</span>
+              <span class="text-slate-500 font-medium">休: ${spot.closed}</span>
+            </div>
+
+            <!-- ステータスグリッド（席タイプ・駐車場・マナーパンツ） -->
+            <div class="grid grid-cols-3 gap-1.5 mb-2.5 bg-slate-50 p-2 rounded-xl border border-slate-100 text-center">
               <div class="p-1">
-                <span class="text-[9px] text-slate-400 font-bold block">店内スタイル</span>
-                <span class="text-[11px] font-extrabold text-slate-700 leading-tight">${spot.style}</span>
+                <span class="text-[9px] text-slate-400 font-bold block">席タイプ</span>
+                <span class="text-[10px] font-extrabold text-slate-700 leading-tight block">${spot.seatType}</span>
+                <span class="text-[9px] text-amber-600 font-medium">${spot.styleText}</span>
               </div>
               <div class="p-1 border-x border-slate-200/60">
                 <span class="text-[9px] text-slate-400 font-bold block">駐車場</span>
-                <span class="text-[11px] font-extrabold text-slate-700 leading-tight">${spot.parking}</span>
+                <span class="text-[11px] font-extrabold text-slate-700 leading-tight block mt-1">${spot.parkingText}</span>
               </div>
               <div class="p-1">
                 <span class="text-[9px] text-slate-400 font-bold block">マナーパンツ</span>
-                <span class="text-[11px] font-extrabold ${spot.pants.includes('必須') ? 'text-rose-600' : 'text-slate-700'} leading-tight">${spot.pants}</span>
+                <span class="text-[11px] font-extrabold ${spot.pantsText.includes('必須') ? 'text-rose-600' : 'text-slate-700'} leading-tight block mt-1">${spot.pantsText}</span>
               </div>
             </div>
 
-            <div class="flex items-center gap-1.5 mb-2">
+            <!-- サービスバッジ & 特徴バッジ -->
+            <div class="flex flex-wrap gap-1.5 mb-2.5">
               <span class="text-[10px] font-bold bg-amber-50 text-amber-800 border border-amber-200 px-2 py-0.5 rounded-md">
                 ★ ${spot.highlight}
               </span>
+              ${serviceBadges}
+            </div>
+
+            <!-- 雨天時の配慮 & メモ -->
+            <div class="bg-blue-50/60 border border-blue-100/80 p-2 rounded-lg text-[11px] text-blue-900 mb-2">
+              <span class="font-bold">☔ 雨の日：</span>${spot.rainFeature}
             </div>
 
             <p class="text-xs text-slate-600 leading-relaxed">
