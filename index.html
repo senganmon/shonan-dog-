@@ -51,16 +51,16 @@
         </div>
       </div>
 
-      <!-- エリア切り替えタブ（保存済みタブ付き） -->
+      <!-- エリア切り替えタブ -->
       <div class="px-3 pb-2 flex space-x-1.5 overflow-x-auto hide-scrollbar" id="area-tabs">
-        <button onclick="changeArea('ALL')" class="tab-btn active shrink-0 text-xs px-3 py-1.5 rounded-full font-bold bg-slate-900 text-white shadow-sm transition">全エリア</button>
-        <button onclick="changeArea('鵠沼')" class="tab-btn shrink-0 text-xs px-3 py-1.5 rounded-full font-bold bg-white text-slate-600 border border-slate-200 transition">鵠沼</button>
+        <button onclick="changeArea('ALL')" class="tab-btn active shrink-0 text-xs px-3.5 py-1.5 rounded-full font-bold bg-slate-900 text-white shadow-sm transition">全エリア</button>
+        <button onclick="changeArea('鵠沼')" class="tab-btn shrink-0 text-xs px-3.5 py-1.5 rounded-full font-bold bg-white text-slate-600 border border-slate-200 transition">鵠沼</button>
         <button onclick="changeArea('藤沢')" class="tab-btn shrink-0 text-xs px-3.5 py-1.5 rounded-full font-bold bg-white text-slate-600 border border-slate-200 transition">藤沢</button>
-        <button onclick="changeArea('茅ヶ崎')" class="tab-btn shrink-0 text-xs px-3 py-1.5 rounded-full font-bold bg-white text-slate-600 border border-slate-200 transition">茅ヶ崎</button>
-        <button onclick="changeArea('鎌倉')" class="tab-btn shrink-0 text-xs px-3 py-1.5 rounded-full font-bold bg-white text-slate-600 border border-slate-200 transition">鎌倉</button>
-        <button onclick="changeArea('逗子')" class="tab-btn shrink-0 text-xs px-3 py-1.5 rounded-full font-bold bg-white text-slate-600 border border-slate-200 transition">逗子</button>
-        <button onclick="changeArea('葉山')" class="tab-btn shrink-0 text-xs px-3 py-1.5 rounded-full font-bold bg-white text-slate-600 border border-slate-200 transition">葉山</button>
-        <button onclick="changeArea('FAV')" id="tab-fav" class="tab-btn shrink-0 text-xs px-3 py-1.5 rounded-full font-bold bg-rose-50 text-rose-600 border border-rose-200 transition flex items-center gap-1">
+        <button onclick="changeArea('茅ヶ崎')" class="tab-btn shrink-0 text-xs px-3.5 py-1.5 rounded-full font-bold bg-white text-slate-600 border border-slate-200 transition">茅ヶ崎</button>
+        <button onclick="changeArea('鎌倉')" class="tab-btn shrink-0 text-xs px-3.5 py-1.5 rounded-full font-bold bg-white text-slate-600 border border-slate-200 transition">鎌倉</button>
+        <button onclick="changeArea('逗子')" class="tab-btn shrink-0 text-xs px-3.5 py-1.5 rounded-full font-bold bg-white text-slate-600 border border-slate-200 transition">逗子</button>
+        <button onclick="changeArea('葉山')" class="tab-btn shrink-0 text-xs px-3.5 py-1.5 rounded-full font-bold bg-white text-slate-600 border border-slate-200 transition">葉山</button>
+        <button onclick="changeArea('FAV')" id="tab-fav" class="tab-btn shrink-0 text-xs px-3.5 py-1.5 rounded-full font-bold bg-rose-50 text-rose-600 border border-rose-200 transition flex items-center gap-1">
           ❤️ 保存済
         </button>
       </div>
@@ -79,10 +79,12 @@
       </div>
     </header>
 
-    <!-- 件数表示 -->
+    <!-- 件数表示（ルート案内誘導） -->
     <div class="px-4 pt-3 pb-1 flex justify-between items-center text-xs text-slate-400 font-bold">
       <span id="spot-count">0件のお店</span>
-      <span class="text-[10px] text-slate-400">店名タップでGoogleマップ</span>
+      <span class="text-[10px] text-amber-700 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full flex items-center gap-0.5">
+        🚗 タップで現在地からのルート案内起動
+      </span>
     </div>
 
     <!-- 店舗カード一覧リスト -->
@@ -109,7 +111,7 @@
       bread:  { icon: "🥐", gradient: "from-orange-600 to-amber-600" }
     };
 
-    // 鵠沼・藤沢・茅ヶ崎を中心に大幅強化した店内同伴OK厳選リスト
+    // destinationパラメータで直接「現在地からのルート案内」を起動するURLに設定
     const SPOTS = [
       {
         id: 101,
@@ -130,7 +132,7 @@
         pantsText: "任意（マナー重視）",
         highlight: "名物わんこバーグ＆広々ソファー",
         rainFeature: "店舗横に無料駐車場あり・雨天ドライブに最適",
-        url: "https://www.google.com/maps/search/?api=1&query=Cafe&Diner+Belice+藤沢市本鵠沼",
+        url: "https://www.google.com/maps/dir/?api=1&destination=Cafe%26Diner+Belice+藤沢市本鵠沼3丁目12-29",
         note: "愛犬家御用達の人気店。小型犬用ハンバーグや季節のフォトブース完備。男性も満足の本格洋食。"
       },
       {
@@ -152,7 +154,7 @@
         pantsText: "任意",
         highlight: "海目の前・ドッグラン併設",
         rainFeature: "完全屋内店舗で雨風・荒天も安心",
-        url: "https://www.google.com/maps/search/?api=1&query=DOG+DEPT+CAFE+湘南江ノ島店",
+        url: "https://www.google.com/maps/dir/?api=1&destination=DOG+DEPT+CAFE+湘南江ノ島店",
         note: "江ノ島水族館・鵠沼海岸前。犬用メニューが豊富でトイプーグッズも揃う安心の直営カフェ。"
       },
       {
@@ -174,7 +176,7 @@
         pantsText: "任意",
         highlight: "藤沢本町駅近くのアットホームカフェ",
         rainFeature: "落ち着いた店内でゆったりランチ",
-        url: "https://www.google.com/maps/search/?api=1&query=Cafe+Corte+藤沢市本町",
+        url: "https://www.google.com/maps/dir/?api=1&destination=Cafe+Corte+藤沢市本町3丁目17-21",
         note: "手作りケーキやヘルシーなランチが美味しく、地元愛犬家が散歩途中に立ち寄る隠れ家カフェ。"
       },
       {
@@ -196,7 +198,7 @@
         pantsText: "任意",
         highlight: "藤沢駅南口から徒歩3分",
         rainFeature: "駅チカで立ち寄りやすい",
-        url: "https://www.google.com/maps/search/?api=1&query=soundwave+coffee+roasters+藤沢市",
+        url: "https://www.google.com/maps/dir/?api=1&destination=soundwave+coffee+roasters+藤沢市鵠沼石上1丁目8-11",
         note: "自家焙煎スペシャルティコーヒー専門店。駅近でトイプーと店内で一息つける貴重なスポット。"
       },
       {
@@ -218,7 +220,7 @@
         pantsText: "任意（マナー重視）",
         highlight: "夜もトイプーとディナーOK",
         rainFeature: "落ち着いた店内で雨の夜も安心",
-        url: "https://www.google.com/maps/search/?api=1&query=SAJI+藤沢市鵠沼石上2丁目",
+        url: "https://www.google.com/maps/dir/?api=1&destination=SAJI+藤沢市鵠沼石上2丁目1-11",
         note: "自然派ワインとお料理が美味しい大人の隠れ家ビストロ。夜に愛犬と一緒に食事できる嬉しいお店。"
       },
       {
@@ -240,7 +242,7 @@
         pantsText: "任意（マナー重視）",
         highlight: "海近く・無添加パンケーキが名物",
         rainFeature: "店内全席ペットOKで雨の日も大歓迎",
-        url: "https://www.google.com/maps/search/?api=1&query=cafe+Lu+茅ヶ崎市東海岸南",
+        url: "https://www.google.com/maps/dir/?api=1&destination=cafe+Lu+茅ヶ崎市東海岸南4丁目11-39-4",
         note: "一軒家のドッグフレンドリーカフェ。ワンコ専用メニューがあり、トイプードル連れに大人気。"
       },
       {
@@ -262,7 +264,7 @@
         pantsText: "任意",
         highlight: "元精麦工場の大空間・絶品石窯ピザ",
         rainFeature: "広い建物内で雨風を完全シャットアウト",
-        url: "https://www.google.com/maps/search/?api=1&query=MOKICHI+FOODS+GARDEN+茅ヶ崎",
+        url: "https://www.google.com/maps/dir/?api=1&destination=MOKICHI+FOODS+GARDEN+茅ヶ崎市元町13-1",
         note: "熊澤酒造直営。店内のペット同伴席は限定4席のみ（必ず事前に電話予約してください）。"
       },
       {
@@ -284,7 +286,7 @@
         pantsText: "任意",
         highlight: "茅ヶ崎の超有名アイス店",
         rainFeature: "屋根付き入口・雨でもイートイン可",
-        url: "https://www.google.com/maps/search/?api=1&query=プレンティーズ+茅ヶ崎本店",
+        url: "https://www.google.com/maps/dir/?api=1&destination=プレンティーズ+茅ヶ崎本店",
         note: "雄三通り沿いの名物店。奥のイートインスペースでトイプーを抱っこしながらアイスを楽しめます。"
       },
       {
@@ -306,7 +308,7 @@
         pantsText: "任意",
         highlight: "目の前がサザンビーチ",
         rainFeature: "広い屋根・囲い席で強風・雨もガード",
-        url: "https://www.google.com/maps/search/?api=1&query=サザンビーチカフェ+茅ヶ崎市中海岸",
+        url: "https://www.google.com/maps/dir/?api=1&destination=サザンビーチカフェ+茅ヶ崎市中海岸4丁目",
         note: "半屋内席・インドア席が充実。愛犬用のお水や専用メニューもあり、雨の日も賑わう人気店です。"
       },
       {
@@ -328,7 +330,7 @@
         pantsText: "任意",
         highlight: "雨の日の小町通りで重宝",
         rainFeature: "完全屋内2Fのため雨風ゼロ・階段あり",
-        url: "https://www.google.com/maps/search/?api=1&query=グランメール+鎌倉市雪ノ下1丁目8-36",
+        url: "https://www.google.com/maps/dir/?api=1&destination=グランメール+鎌倉市雪ノ下1丁目8-36",
         note: "小町通りの路地裏ビル2F。悪天候でも落ち着いてトイプーと名物オムライスや洋食ランチを味わえます。"
       },
       {
@@ -350,7 +352,7 @@
         pantsText: "任意",
         highlight: "長谷の路地裏・新オープン",
         rainFeature: "店内で温かいコーヒーと焼菓子",
-        url: "https://www.google.com/maps/search/?api=1&query=The+Pass+鎌倉市長谷",
+        url: "https://www.google.com/maps/dir/?api=1&destination=The+Pass+鎌倉市長谷1丁目15-10",
         note: "長谷寺近くに新しく誕生したドッグフレンドリーカフェ。店内で愛犬と一緒にこだわりのコーヒーが楽しめます。"
       },
       {
@@ -372,7 +374,7 @@
         pantsText: "任意",
         highlight: "長谷寺・由比ヶ浜散策の休憩",
         rainFeature: "軒先あり・足拭きタオルがあると安心",
-        url: "https://www.google.com/maps/search/?api=1&query=カフェ蕾+鎌倉市長谷2丁目",
+        url: "https://www.google.com/maps/dir/?api=1&destination=カフェ蕾+鎌倉市長谷2丁目13-37",
         note: "風情ある古民家でくずきりや和スイーツを。静かに落ち着いて過ごしたい愛犬家に人気のスポットです。"
       },
       {
@@ -394,7 +396,7 @@
         pantsText: "任意",
         highlight: "逗子駅近くの静かな路地裏",
         rainFeature: "静かで雨宿りティータイムに最適",
-        url: "https://www.google.com/maps/search/?api=1&query=ZUSHI+atelier+cafe+逗子市",
+        url: "https://www.google.com/maps/dir/?api=1&destination=ZUSHI+atelier+cafe+逗子市逗子5丁目2-53",
         note: "逗子駅すぐの落ち着いたカフェ。トイプーと静かに手作りスイーツやコーヒーを味わえます。"
       },
       {
@@ -416,7 +418,7 @@
         pantsText: "任意",
         highlight: "逗子海岸すぐそばのベーカリー",
         rainFeature: "店内で焼きたてパンモーニング可能",
-        url: "https://www.google.com/maps/search/?api=1&query=ラトリエココン+逗子市新宿",
+        url: "https://www.google.com/maps/dir/?api=1&destination=ラトリエココン+逗子市新宿1丁目4-28",
         note: "逗子海岸近くのベーカリー。絶品の焼きたてパンを愛犬と一緒に店内でゆっくり味わえます。"
       },
       {
@@ -438,7 +440,7 @@
         pantsText: "任意",
         highlight: "一色海岸・御用邸近くの名店",
         rainFeature: "ドライブ途中の立ち寄りにおすすめ",
-        url: "https://www.google.com/maps/search/?api=1&query=THE+FIVE+BEANS+葉山町一色",
+        url: "https://www.google.com/maps/dir/?api=1&destination=THE+FIVE+BEANS+葉山町一色2075",
         note: "一色海岸近くの名店ロースタリー。トイプーと一緒に店内で淹れたてのスペシャルティ珈琲を楽しめます。"
       },
       {
@@ -460,7 +462,7 @@
         pantsText: "任意（マナー重視）",
         highlight: "昭和初期の趣ある旧別荘建築",
         rainFeature: "土間席は雨でも風情ある景色を堪能",
-        url: "https://www.google.com/maps/search/?api=1&query=engawa+cafe+葉山町一色",
+        url: "https://www.google.com/maps/dir/?api=1&destination=engawa+cafe+葉山町一色1664-1",
         note: "歴史ある古民家の土間スペースでトイプーと同伴OK。三浦野菜を使った優しいランチが大人気。"
       }
     ];
@@ -473,7 +475,6 @@
       dogMenu: false
     };
 
-    // お気に入り管理（ローカルストレージ保存）
     function getFavorites() {
       try {
         return JSON.parse(localStorage.getItem('inukoro_favs') || '[]');
@@ -520,19 +521,16 @@
 
       let filtered = SPOTS;
 
-      // エリアまたは保存済みの切り替え
       if (currentArea === 'FAV') {
         filtered = filtered.filter(s => favs.includes(s.id));
       } else if (currentArea !== 'ALL') {
         filtered = filtered.filter(s => s.area === currentArea);
       }
 
-      // クイックフィルター
       if (filters.parking) filtered = filtered.filter(s => s.hasParking);
       if (filters.chair) filtered = filtered.filter(s => s.canChair);
       if (filters.dogMenu) filtered = filtered.filter(s => s.hasDogMenu);
 
-      // フリーワード検索
       if (searchQuery) {
         filtered = filtered.filter(s => {
           const target = (s.name + s.area + s.categoryText + s.address + s.highlight + s.note + s.rainFeature).toLowerCase();
@@ -579,7 +577,6 @@
               <span class="text-xs font-bold bg-black/20 backdrop-blur px-2.5 py-0.5 rounded-full text-white/90">
                 ${spot.area}
               </span>
-              <!-- お気に入り保存ハートボタン -->
               <button 
                 onclick="toggleFavorite(${spot.id}, event)" 
                 class="w-7 h-7 rounded-full bg-white/90 backdrop-blur flex items-center justify-center shadow-sm text-sm active:scale-125 transition"
@@ -591,9 +588,14 @@
           </div>
 
           <div class="p-3.5">
-            <h2 class="text-base font-extrabold text-slate-900 leading-tight mb-1">
-              ${spot.name}
-            </h2>
+            <div class="flex items-center justify-between mb-1">
+              <h2 class="text-base font-extrabold text-slate-900 leading-tight">
+                ${spot.name}
+              </h2>
+              <span class="text-[11px] font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded flex items-center gap-0.5 shrink-0">
+                ルート案内 ➔
+              </span>
+            </div>
             
             <p class="text-[11px] text-slate-400 mb-2 flex items-center">
               📍 <span class="ml-1">${spot.address}</span>
@@ -656,7 +658,7 @@
           }
         } else {
           if (btn.id === 'tab-fav') {
-            btn.className = 'tab-btn shrink-0 text-xs px-3 py-1.5 rounded-full font-bold bg-rose-50 text-rose-600 border border-rose-200 transition flex items-center gap-1';
+            btn.className = 'tab-btn shrink-0 text-xs px-3.5 py-1.5 rounded-full font-bold bg-rose-50 text-rose-600 border border-rose-200 transition flex items-center gap-1';
           } else {
             btn.className = 'tab-btn shrink-0 text-xs px-3.5 py-1.5 rounded-full font-bold bg-white text-slate-600 border border-slate-200 transition';
           }
