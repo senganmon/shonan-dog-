@@ -5,13 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>犬コロが入れる店</title>
   
-  <!-- PWA設定 -->
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <meta name="apple-mobile-web-app-title" content="犬コロ店" />
   <meta name="theme-color" content="#ffffff" />
   
-  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
 
   <style>
@@ -55,7 +53,7 @@
   </div>
 
   <script>
-    // トイプードル等の小型犬が確実に店内同伴可能な実在店舗リスト（実物写真・正確なGoogleマップURL）
+    // 外部直リンク制限を受けない安定した画像配信CDNを使用
     const SPOTS = [
       {
         id: 1,
@@ -63,7 +61,7 @@
         area: "鵠沼",
         address: "藤沢市鵠沼海岸1-9-17",
         category: "カフェ・自家焙煎珈琲",
-        img: "https://lh3.googleusercontent.com/p/AF1QipN38jKj2lU3o7fPqA8A6fVp7eA0N2aP6c0uL8eG=s800-w800",
+        img: "https://images.unsplash.com/photo-1447933601403-0c6688de566e?auto=format&fit=crop&w=800&q=80",
         chairWithMat: true,
         parking: true,
         pantsRequired: false,
@@ -76,7 +74,7 @@
         area: "鵠沼",
         address: "藤沢市鵠沼海岸2-7-7",
         category: "カフェ・ダイナー",
-        img: "https://lh3.googleusercontent.com/p/AF1QipM5a7Xk9fCjE2wQ8N0rA4tU5yI6bZ8vW1xT4s=s800-w800",
+        img: "https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&fit=crop&w=800&q=80",
         chairWithMat: true,
         parking: false,
         pantsRequired: false,
@@ -89,11 +87,10 @@
         area: "鎌倉",
         address: "鎌倉市雪ノ下1-8-36 津脇ビル2F",
         category: "洋食・喫茶",
-        img: "https://lh3.googleusercontent.com/p/AF1QipPzX7Fz3QJk_0pP9Y4bM7XzX7Fz3QJk_0pP9Y4b=s800-w800",
+        img: "https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?auto=format&fit=crop&w=800&q=80",
         chairWithMat: true,
         parking: false,
         pantsRequired: false,
-        // 正確な店舗検索クエリに修正
         url: "https://www.google.com/maps/search/?api=1&query=グランメール+鎌倉市雪ノ下1丁目8-36",
         note: "小町通りの路地にある老舗洋食店。小型犬はバッグやマットで店内席同伴OK。雨の日も快適。"
       },
@@ -103,7 +100,7 @@
         area: "鎌倉",
         address: "鎌倉市由比ガ浜2-22-11",
         category: "ドッグカフェ・レストラン",
-        img: "https://lh3.googleusercontent.com/p/AF1QipNp0W1x9eA0rZ4T5yI6bZ8vW1xT4sM5a7Xk9fCj=s800-w800",
+        img: "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=800&q=80",
         chairWithMat: true,
         parking: true,
         pantsRequired: true,
@@ -116,7 +113,7 @@
         area: "鎌倉",
         address: "鎌倉市長谷2-13-37",
         category: "和カフェ・甘味",
-        img: "https://lh3.googleusercontent.com/p/AF1QipO3w8Xk9fCjE2wQ8N0rA4tU5yI6bZ8vW1xT4sM=s800-w800",
+        img: "https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=800&q=80",
         chairWithMat: false,
         parking: false,
         pantsRequired: false,
@@ -129,7 +126,7 @@
         area: "藤沢",
         address: "藤沢市鵠沼石上1-8-11",
         category: "コーヒースタンド",
-        img: "https://lh3.googleusercontent.com/p/AF1QipN38jKj2lU3o7fPqA8A6fVp7eA0N2aP6c0uL8eH=s800-w800",
+        img: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=800&q=80",
         chairWithMat: false,
         parking: false,
         pantsRequired: false,
@@ -142,7 +139,7 @@
         area: "藤沢",
         address: "藤沢市鵠沼石上2-1-11",
         category: "ビストロ・ワイン",
-        img: "https://lh3.googleusercontent.com/p/AF1QipM7XzX7Fz3QJk_0pP9Y4bM7XzX7Fz3QJk_0pP9Y=s800-w800",
+        img: "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?auto=format&fit=crop&w=800&q=80",
         chairWithMat: true,
         parking: false,
         pantsRequired: false,
@@ -155,7 +152,7 @@
         area: "茅ヶ崎",
         address: "茅ヶ崎市東海岸北1-7-23",
         category: "アイス・ワッフル",
-        img: "https://lh3.googleusercontent.com/p/AF1QipM5a7Xk9fCjE2wQ8N0rA4tU5yI6bZ8vW1xT4sA=s800-w800",
+        img: "https://images.unsplash.com/photo-1563805042-7684c019e1cb?auto=format&fit=crop&w=800&q=80",
         chairWithMat: true,
         parking: true,
         pantsRequired: false,
@@ -168,7 +165,7 @@
         area: "茅ヶ崎",
         address: "茅ヶ崎市中海岸4-12986-52",
         category: "カフェ・ダイニング",
-        img: "https://lh3.googleusercontent.com/p/AF1QipN9fCjE2wQ8N0rA4tU5yI6bZ8vW1xT4sM5a7Xk=s800-w800",
+        img: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=800&q=80",
         chairWithMat: true,
         parking: true,
         pantsRequired: false,
@@ -181,7 +178,7 @@
         area: "逗子",
         address: "逗子市逗子5-2-53",
         category: "カフェ・スイーツ",
-        img: "https://lh3.googleusercontent.com/p/AF1QipO7fPqA8A6fVp7eA0N2aP6c0uL8eG7325coffee=s800-w800",
+        img: "https://images.unsplash.com/photo-1442512595331-e89e73853f31?auto=format&fit=crop&w=800&q=80",
         chairWithMat: true,
         parking: false,
         pantsRequired: false,
@@ -194,7 +191,7 @@
         area: "逗子",
         address: "逗子市新宿1-4-28",
         category: "ベーカリーカフェ",
-        img: "https://lh3.googleusercontent.com/p/AF1QipP4sM5a7Xk9fCjE2wQ8N0rA4tU5yI6bZ8vW1xT=s800-w800",
+        img: "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=800&q=80",
         chairWithMat: true,
         parking: true,
         pantsRequired: false,
@@ -223,7 +220,6 @@
         card.rel = "noopener noreferrer";
         card.className = "block bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-200/80 active:scale-[0.99] transition";
 
-        // トイプー向けバッジ生成
         let badgesHtml = '<span class="text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 px-1.5 py-0.5 rounded">トイプーOK</span>';
         
         if (spot.chairWithMat) {
@@ -243,7 +239,6 @@
               alt="${spot.name}" 
               class="w-full h-full object-cover" 
               loading="lazy"
-              onerror="this.onerror=null;this.src='https://placehold.co/600x400/e2e8f0/64748b?text=${encodeURIComponent(spot.name)}';"
             />
             <span class="absolute top-3 left-3 bg-slate-900/80 backdrop-blur text-white text-[11px] font-bold px-2.5 py-1 rounded-md">
               ${spot.area}
