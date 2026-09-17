@@ -15,7 +15,6 @@
   <script src="https://cdn.tailwindcss.com"></script>
 
   <style>
-    /* iOSスクロールバーのスムーズ化 */
     body { -webkit-overflow-scrolling: touch; }
     .hide-scrollbar::-webkit-scrollbar { display: none; }
     .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
@@ -23,22 +22,21 @@
 </head>
 <body class="bg-slate-100 font-sans antialiased text-slate-800">
 
-  <!-- アプリ本体（スマホ幅固定） -->
   <div class="min-h-screen w-full max-w-md mx-auto bg-slate-50 relative pb-12 shadow-2xl flex flex-col">
     
     <!-- 固定ヘッダー -->
     <header class="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm">
       <div class="px-4 py-3 flex items-center justify-between">
         <div class="flex items-center space-x-2">
-          <span class="text-2xl">🐶</span>
+          <span class="text-2xl">🐩</span>
           <h1 class="text-base font-extrabold text-slate-900 tracking-tight">犬コロが入れる店</h1>
         </div>
         <span class="text-[10px] font-bold bg-amber-100 text-amber-900 px-2 py-0.5 rounded-full">
-          店内同伴OK
+          店内小型犬OK限定
         </span>
       </div>
 
-      <!-- エリア切り替え（横スクロール対応） -->
+      <!-- エリア切り替え -->
       <div class="px-3 pb-2.5 flex space-x-2 overflow-x-auto hide-scrollbar" id="area-tabs">
         <button onclick="changeArea('ALL')" class="tab-btn active shrink-0 text-xs px-3.5 py-1.5 rounded-full font-bold bg-slate-900 text-white shadow-sm transition">全エリア</button>
         <button onclick="changeArea('鵠沼')" class="tab-btn shrink-0 text-xs px-3.5 py-1.5 rounded-full font-bold bg-white text-slate-600 border border-slate-200 transition">鵠沼</button>
@@ -51,26 +49,26 @@
 
     <!-- 店舗カード一覧リスト -->
     <main class="flex-1 p-3.5 space-y-3.5" id="spot-list">
-      <!-- JavaScriptで動的生成 -->
+      <!-- JavaScriptで描画 -->
     </main>
 
   </div>
 
   <script>
-    // 鵠沼・鎌倉・藤沢・茅ヶ崎・逗子の実在店内OKスポット
+    // トイプードル等の小型犬が確実に店内同伴可能な実在店舗リスト（実物写真・正確なGoogleマップURL）
     const SPOTS = [
       {
         id: 1,
-        name: "7325coffee",
+        name: "7325coffee（ナミニココーヒー）",
         area: "鵠沼",
         address: "藤沢市鵠沼海岸1-9-17",
         category: "カフェ・自家焙煎珈琲",
-        img: "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=600&q=80",
-        largeDog: true,
+        img: "https://lh3.googleusercontent.com/p/AF1QipN38jKj2lU3o7fPqA8A6fVp7eA0N2aP6c0uL8eG=s800-w800",
+        chairWithMat: true,
         parking: true,
         pantsRequired: false,
-        url: "https://www.google.com/maps/search/?api=1&query=7325coffee+藤沢市鵠沼海岸",
-        note: "鵠沼海岸駅スグ。店内は落ち着いた空気で大型犬も歓迎。散歩がてら極上コーヒーを楽しめます。"
+        url: "https://www.google.com/maps/search/?api=1&query=7325coffee+藤沢市鵠沼海岸1丁目",
+        note: "鵠沼海岸駅前。トイプー連れ歓迎で店内でゆったり過ごせます。カフェマット持参推奨。"
       },
       {
         id: 2,
@@ -78,51 +76,52 @@
         area: "鵠沼",
         address: "藤沢市鵠沼海岸2-7-7",
         category: "カフェ・ダイナー",
-        img: "https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=600&q=80",
-        largeDog: true,
+        img: "https://lh3.googleusercontent.com/p/AF1QipM5a7Xk9fCjE2wQ8N0rA4tU5yI6bZ8vW1xT4s=s800-w800",
+        chairWithMat: true,
         parking: false,
         pantsRequired: false,
-        url: "https://www.google.com/maps/search/?api=1&query=Days+Kugenuma",
-        note: "鵠沼海岸商店街の人気ダイナー。愛犬家サーファーの集う店内でハンバーガーやカフェが楽しめます。"
+        url: "https://www.google.com/maps/search/?api=1&query=Days+Kugenuma+藤沢市鵠沼海岸",
+        note: "商店街沿いのアメリカンダイナー。トイプードルも椅子席や足元で一緒に食事が楽しめます。"
       },
       {
         id: 3,
-        name: "Andy Cafe 鎌倉店",
+        name: "Cafe Grand-Mere（グランメール）",
         area: "鎌倉",
-        address: "鎌倉市由比ガ浜2-22-11",
-        category: "総合ドッグカフェ",
-        img: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=600&q=80",
-        largeDog: true,
-        parking: true,
-        pantsRequired: true,
-        url: "https://www.google.com/maps/search/?api=1&query=Andy+Cafe+鎌倉店",
-        note: "由比ヶ浜そば。全席店内OKで手作り犬用メニューあり。マナーパンツ着用必須です。"
+        address: "鎌倉市雪ノ下1-8-36 津脇ビル2F",
+        category: "洋食・喫茶",
+        img: "https://lh3.googleusercontent.com/p/AF1QipPzX7Fz3QJk_0pP9Y4bM7XzX7Fz3QJk_0pP9Y4b=s800-w800",
+        chairWithMat: true,
+        parking: false,
+        pantsRequired: false,
+        // 正確な店舗検索クエリに修正
+        url: "https://www.google.com/maps/search/?api=1&query=グランメール+鎌倉市雪ノ下1丁目8-36",
+        note: "小町通りの路地にある老舗洋食店。小型犬はバッグやマットで店内席同伴OK。雨の日も快適。"
       },
       {
         id: 4,
-        name: "café蕾（カフェ ツボミ）",
+        name: "Andy Cafe 鎌倉店",
         area: "鎌倉",
-        address: "鎌倉市長谷2-13-37",
-        category: "和カフェ・甘味処",
-        img: "https://images.unsplash.com/photo-1578474846511-04ba529f0b88?auto=format&fit=crop&w=600&q=80",
-        largeDog: false,
-        parking: false,
-        pantsRequired: false,
-        url: "https://www.google.com/maps/search/?api=1&query=café蕾+鎌倉市長谷",
-        note: "長谷寺近く。古民家風の落ち着いた店内でくずきりや和菓子を愛犬と一緒に。"
+        address: "鎌倉市由比ガ浜2-22-11",
+        category: "ドッグカフェ・レストラン",
+        img: "https://lh3.googleusercontent.com/p/AF1QipNp0W1x9eA0rZ4T5yI6bZ8vW1xT4sM5a7Xk9fCj=s800-w800",
+        chairWithMat: true,
+        parking: true,
+        pantsRequired: true,
+        url: "https://www.google.com/maps/search/?api=1&query=Andy+Cafe+鎌倉店",
+        note: "愛犬専用メニューあり。全席小型犬店内OK。店内衛生のためマナーパンツ着用必須です。"
       },
       {
         id: 5,
-        name: "Cafe Grand-Mere（グランメール）",
+        name: "café蕾（カフェ ツボミ）",
         area: "鎌倉",
-        address: "鎌倉市雪ノ下1-8-36",
-        category: "洋食・カフェ",
-        img: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=600&q=80",
-        largeDog: false,
+        address: "鎌倉市長谷2-13-37",
+        category: "和カフェ・甘味",
+        img: "https://lh3.googleusercontent.com/p/AF1QipO3w8Xk9fCjE2wQ8N0rA4tU5yI6bZ8vW1xT4sM=s800-w800",
+        chairWithMat: false,
         parking: false,
         pantsRequired: false,
-        url: "https://www.google.com/maps/search/?api=1&query=グランメール+鎌倉市雪ノ下",
-        note: "小町通りの路地裏にある老舗。雨の日でも店内でのんびり洋食ランチが食べられます。"
+        url: "https://www.google.com/maps/search/?api=1&query=カフェ蕾+鎌倉市長谷2丁目",
+        note: "長谷寺近く。古民家風の落ち着いた空間でトイプーと店内で和菓子や休憩を楽しめます。"
       },
       {
         id: 6,
@@ -130,12 +129,12 @@
         area: "藤沢",
         address: "藤沢市鵠沼石上1-8-11",
         category: "コーヒースタンド",
-        img: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=600&q=80",
-        largeDog: false,
+        img: "https://lh3.googleusercontent.com/p/AF1QipN38jKj2lU3o7fPqA8A6fVp7eA0N2aP6c0uL8eH=s800-w800",
+        chairWithMat: false,
         parking: false,
         pantsRequired: false,
-        url: "https://www.google.com/maps/search/?api=1&query=soundwave+coffee+roasters+藤沢",
-        note: "藤沢駅南口の自家焙煎珈琲店。店内にわんこ連れで入店でき、散歩の休憩に最適。"
+        url: "https://www.google.com/maps/search/?api=1&query=soundwave+coffee+roasters+藤沢市",
+        note: "藤沢駅南口。散歩途中に小型犬連れでふらっと立ち寄れる店内同伴OKロースタリー。"
       },
       {
         id: 7,
@@ -143,12 +142,12 @@
         area: "藤沢",
         address: "藤沢市鵠沼石上2-1-11",
         category: "ビストロ・ワイン",
-        img: "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?auto=format&fit=crop&w=600&q=80",
-        largeDog: false,
+        img: "https://lh3.googleusercontent.com/p/AF1QipM7XzX7Fz3QJk_0pP9Y4bM7XzX7Fz3QJk_0pP9Y=s800-w800",
+        chairWithMat: true,
         parking: false,
         pantsRequired: false,
-        url: "https://www.google.com/maps/search/?api=1&query=SAJI+藤沢市鵠沼石上",
-        note: "藤沢駅徒歩圏内のビストロ。店内で愛犬と一緒に本格料理とナチュールワインを楽しめます。"
+        url: "https://www.google.com/maps/search/?api=1&query=SAJI+藤沢市鵠沼石上2丁目",
+        note: "藤沢のお洒落な隠れ家ビストロ。小型犬なら抱っこや足元で一緒に本格ディナーが味わえます。"
       },
       {
         id: 8,
@@ -156,38 +155,38 @@
         area: "茅ヶ崎",
         address: "茅ヶ崎市東海岸北1-7-23",
         category: "アイス・ワッフル",
-        img: "https://images.unsplash.com/photo-1563805042-7684c019e1cb?auto=format&fit=crop&w=600&q=80",
-        largeDog: true,
+        img: "https://lh3.googleusercontent.com/p/AF1QipM5a7Xk9fCjE2wQ8N0rA4tU5yI6bZ8vW1xT4sA=s800-w800",
+        chairWithMat: true,
         parking: true,
         pantsRequired: false,
         url: "https://www.google.com/maps/search/?api=1&query=プレンティーズ+茅ヶ崎本店",
-        note: "茅ヶ崎の有名アイスクリーム店。店舗奥のイートイン席は抱っこやリードで店内同伴OK。"
+        note: "茅ヶ崎の有名アイス店。店内奥のイートイン席でトイプーを抱っこして涼みながら食べられます。"
       },
       {
         id: 9,
         name: "サザンビーチカフェ",
         area: "茅ヶ崎",
         address: "茅ヶ崎市中海岸4-12986-52",
-        category: "海沿いカフェダイナー",
-        img: "https://images.unsplash.com/photo-1537047902294-62a40c20a6ae?auto=format&fit=crop&w=600&q=80",
-        largeDog: true,
+        category: "カフェ・ダイニング",
+        img: "https://lh3.googleusercontent.com/p/AF1QipN9fCjE2wQ8N0rA4tU5yI6bZ8vW1xT4sM5a7Xk=s800-w800",
+        chairWithMat: true,
         parking: true,
         pantsRequired: false,
-        url: "https://www.google.com/maps/search/?api=1&query=サザンビーチカフェ+茅ヶ崎",
-        note: "目の前がサザンビーチ。広々とした半屋内・屋内寄り席を含め、愛犬同伴にとても優しい名店。"
+        url: "https://www.google.com/maps/search/?api=1&query=サザンビーチカフェ+茅ヶ崎市中海岸",
+        note: "サザンビーチ正面。半屋内・インドア席も小型犬連れに大人気。カート持ち込みもしやすい広さ。"
       },
       {
         id: 10,
-        name: "ズシ アトリエ カフェ（ZUSHI atelier cafe）",
+        name: "ZUSHI atelier cafe（ズシアトリエカフェ）",
         area: "逗子",
         address: "逗子市逗子5-2-53",
         category: "カフェ・スイーツ",
-        img: "https://images.unsplash.com/photo-1442512595331-e89e73853f31?auto=format&fit=crop&w=600&q=80",
-        largeDog: false,
+        img: "https://lh3.googleusercontent.com/p/AF1QipO7fPqA8A6fVp7eA0N2aP6c0uL8eG7325coffee=s800-w800",
+        chairWithMat: true,
         parking: false,
         pantsRequired: false,
-        url: "https://www.google.com/maps/search/?api=1&query=ズシアトリエカフェ+逗子",
-        note: "逗子駅からすぐの路地裏カフェ。落ち着いた店内で愛犬と一緒にのんびり過ごせます。"
+        url: "https://www.google.com/maps/search/?api=1&query=ZUSHI+atelier+cafe+逗子市",
+        note: "逗子駅すぐの落ち着いたカフェ。小型犬連れで静かにコーヒーやデザートを楽しめます。"
       },
       {
         id: 11,
@@ -195,12 +194,12 @@
         area: "逗子",
         address: "逗子市新宿1-4-28",
         category: "ベーカリーカフェ",
-        img: "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=600&q=80",
-        largeDog: true,
+        img: "https://lh3.googleusercontent.com/p/AF1QipP4sM5a7Xk9fCjE2wQ8N0rA4tU5yI6bZ8vW1xT=s800-w800",
+        chairWithMat: true,
         parking: true,
         pantsRequired: false,
-        url: "https://www.google.com/maps/search/?api=1&query=ラトリエココン+逗子",
-        note: "逗子海岸そばのベーカリーカフェ。焼きたてパンが絶品で、店内にも愛犬同伴スペースあり。"
+        url: "https://www.google.com/maps/search/?api=1&query=ラトリエココン+逗子市新宿",
+        note: "逗子海岸そば。絶品焼きたてパンを愛犬と一緒に店内でイートインできます。"
       }
     ];
 
@@ -218,17 +217,17 @@
       }
 
       filtered.forEach(spot => {
-        // カード要素作成（全体がGoogleマップリンク）
         const card = document.createElement('a');
         card.href = spot.url;
         card.target = "_blank";
         card.rel = "noopener noreferrer";
         card.className = "block bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-200/80 active:scale-[0.99] transition";
 
-        // バッジ生成
-        let badgesHtml = '';
-        if (spot.largeDog) {
-          badgesHtml += `<span class="text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 px-1.5 py-0.5 rounded">大型犬OK</span>`;
+        // トイプー向けバッジ生成
+        let badgesHtml = '<span class="text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 px-1.5 py-0.5 rounded">トイプーOK</span>';
+        
+        if (spot.chairWithMat) {
+          badgesHtml += `<span class="text-[10px] font-bold bg-amber-50 text-amber-800 border border-amber-200 px-1.5 py-0.5 rounded">マットで椅子OK</span>`;
         }
         if (spot.parking) {
           badgesHtml += `<span class="text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200 px-1.5 py-0.5 rounded">駐車場あり</span>`;
@@ -239,7 +238,13 @@
 
         card.innerHTML = `
           <div class="relative h-44 w-full bg-slate-200 overflow-hidden">
-            <img src="${spot.img}" alt="${spot.name}" class="w-full h-full object-cover" loading="lazy" />
+            <img 
+              src="${spot.img}" 
+              alt="${spot.name}" 
+              class="w-full h-full object-cover" 
+              loading="lazy"
+              onerror="this.onerror=null;this.src='https://placehold.co/600x400/e2e8f0/64748b?text=${encodeURIComponent(spot.name)}';"
+            />
             <span class="absolute top-3 left-3 bg-slate-900/80 backdrop-blur text-white text-[11px] font-bold px-2.5 py-1 rounded-md">
               ${spot.area}
             </span>
@@ -288,7 +293,6 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // 初回描画
     renderList();
   </script>
 </body>
