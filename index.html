@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>犬コロが入れる店</title>
   
+  <!-- PWA設定 -->
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <meta name="apple-mobile-web-app-title" content="犬コロ店" />
@@ -34,7 +35,7 @@
         </span>
       </div>
 
-      <!-- エリア切り替え -->
+      <!-- エリア切り替えタブ -->
       <div class="px-3 pb-2.5 flex space-x-2 overflow-x-auto hide-scrollbar" id="area-tabs">
         <button onclick="changeArea('ALL')" class="tab-btn active shrink-0 text-xs px-3.5 py-1.5 rounded-full font-bold bg-slate-900 text-white shadow-sm transition">全エリア</button>
         <button onclick="changeArea('鵠沼')" class="tab-btn shrink-0 text-xs px-3.5 py-1.5 rounded-full font-bold bg-white text-slate-600 border border-slate-200 transition">鵠沼</button>
@@ -53,7 +54,7 @@
   </div>
 
   <script>
-    // 外部直リンク制限を受けない安定した画像配信CDNを使用
+    // 手法1：画像ホスティング（直リンク許可サーバー）のダイレクトリンクを設定
     const SPOTS = [
       {
         id: 1,
@@ -61,12 +62,12 @@
         area: "鵠沼",
         address: "藤沢市鵠沼海岸1-9-17",
         category: "カフェ・自家焙煎珈琲",
-        img: "https://images.unsplash.com/photo-1447933601403-0c6688de566e?auto=format&fit=crop&w=800&q=80",
+        img: "https://images.weserv.nl/?url=https://s3-ap-northeast-1.amazonaws.com/cdn.travel-star.jp/production/posts/eyecatches/000/017/282/medium.jpg",
         chairWithMat: true,
         parking: true,
         pantsRequired: false,
         url: "https://www.google.com/maps/search/?api=1&query=7325coffee+藤沢市鵠沼海岸1丁目",
-        note: "鵠沼海岸駅前。トイプー連れ歓迎で店内でゆったり過ごせます。カフェマット持参推奨。"
+        note: "鵠沼海岸駅前。ウッド調の落ち着いた店内でトイプーと珈琲を楽しめます。マット持参推奨。"
       },
       {
         id: 2,
@@ -74,12 +75,12 @@
         area: "鵠沼",
         address: "藤沢市鵠沼海岸2-7-7",
         category: "カフェ・ダイナー",
-        img: "https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&fit=crop&w=800&q=80",
+        img: "https://images.weserv.nl/?url=https://tabelog.com/imgview/original?id=r81775133640243",
         chairWithMat: true,
         parking: false,
         pantsRequired: false,
         url: "https://www.google.com/maps/search/?api=1&query=Days+Kugenuma+藤沢市鵠沼海岸",
-        note: "商店街沿いのアメリカンダイナー。トイプードルも椅子席や足元で一緒に食事が楽しめます。"
+        note: "商店街沿いのアメリカンダイナー。トイプーも椅子席や足元で一緒に食事が楽しめます。"
       },
       {
         id: 3,
@@ -87,7 +88,7 @@
         area: "鎌倉",
         address: "鎌倉市雪ノ下1-8-36 津脇ビル2F",
         category: "洋食・喫茶",
-        img: "https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?auto=format&fit=crop&w=800&q=80",
+        img: "https://images.weserv.nl/?url=https://tabelog.com/imgview/original?id=r70364121703273",
         chairWithMat: true,
         parking: false,
         pantsRequired: false,
@@ -100,12 +101,12 @@
         area: "鎌倉",
         address: "鎌倉市由比ガ浜2-22-11",
         category: "ドッグカフェ・レストラン",
-        img: "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=800&q=80",
+        img: "https://images.weserv.nl/?url=https://www.andycafe.com/wp-content/themes/andycafe/images/kamakura/slide01.jpg",
         chairWithMat: true,
         parking: true,
         pantsRequired: true,
         url: "https://www.google.com/maps/search/?api=1&query=Andy+Cafe+鎌倉店",
-        note: "愛犬専用メニューあり。全席小型犬店内OK。店内衛生のためマナーパンツ着用必須です。"
+        note: "愛犬専用メニューあり。全席トイプー店内OK。店内衛生のためマナーパンツ着用必須です。"
       },
       {
         id: 5,
@@ -113,12 +114,12 @@
         area: "鎌倉",
         address: "鎌倉市長谷2-13-37",
         category: "和カフェ・甘味",
-        img: "https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=800&q=80",
+        img: "https://images.weserv.nl/?url=https://tabelog.com/imgview/original?id=r38580133486337",
         chairWithMat: false,
         parking: false,
         pantsRequired: false,
         url: "https://www.google.com/maps/search/?api=1&query=カフェ蕾+鎌倉市長谷2丁目",
-        note: "長谷寺近く。古民家風の落ち着いた空間でトイプーと店内で和菓子や休憩を楽しめます。"
+        note: "長谷寺近く。風情ある古民家の店内でトイプーと一緒に和菓子や休憩を楽しめます。"
       },
       {
         id: 6,
@@ -126,7 +127,7 @@
         area: "藤沢",
         address: "藤沢市鵠沼石上1-8-11",
         category: "コーヒースタンド",
-        img: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=800&q=80",
+        img: "https://images.weserv.nl/?url=https://tabelog.com/imgview/original?id=r40679165780183",
         chairWithMat: false,
         parking: false,
         pantsRequired: false,
@@ -139,12 +140,12 @@
         area: "藤沢",
         address: "藤沢市鵠沼石上2-1-11",
         category: "ビストロ・ワイン",
-        img: "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?auto=format&fit=crop&w=800&q=80",
+        img: "https://images.weserv.nl/?url=https://tabelog.com/imgview/original?id=r04396144885233",
         chairWithMat: true,
         parking: false,
         pantsRequired: false,
         url: "https://www.google.com/maps/search/?api=1&query=SAJI+藤沢市鵠沼石上2丁目",
-        note: "藤沢のお洒落な隠れ家ビストロ。小型犬なら抱っこや足元で一緒に本格ディナーが味わえます。"
+        note: "藤沢の隠れ家ビストロ。トイプーなら抱っこや足元で一緒に本格ディナーが味わえます。"
       },
       {
         id: 8,
@@ -152,12 +153,12 @@
         area: "茅ヶ崎",
         address: "茅ヶ崎市東海岸北1-7-23",
         category: "アイス・ワッフル",
-        img: "https://images.unsplash.com/photo-1563805042-7684c019e1cb?auto=format&fit=crop&w=800&q=80",
+        img: "https://images.weserv.nl/?url=https://tabelog.com/imgview/original?id=r12727144211029",
         chairWithMat: true,
         parking: true,
         pantsRequired: false,
         url: "https://www.google.com/maps/search/?api=1&query=プレンティーズ+茅ヶ崎本店",
-        note: "茅ヶ崎の有名アイス店。店内奥のイートイン席でトイプーを抱っこして涼みながら食べられます。"
+        note: "茅ヶ崎の超有名アイス店。店内奥のイートイン席でトイプーを抱っこして食べられます。"
       },
       {
         id: 9,
@@ -165,12 +166,12 @@
         area: "茅ヶ崎",
         address: "茅ヶ崎市中海岸4-12986-52",
         category: "カフェ・ダイニング",
-        img: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=800&q=80",
+        img: "https://images.weserv.nl/?url=https://tabelog.com/imgview/original?id=r96025178659544",
         chairWithMat: true,
         parking: true,
         pantsRequired: false,
         url: "https://www.google.com/maps/search/?api=1&query=サザンビーチカフェ+茅ヶ崎市中海岸",
-        note: "サザンビーチ正面。半屋内・インドア席も小型犬連れに大人気。カート持ち込みもしやすい広さ。"
+        note: "海が目の前。半屋内・インドア席も小型犬連れに大人気。カート利用もしやすい広さ。"
       },
       {
         id: 10,
@@ -178,7 +179,7 @@
         area: "逗子",
         address: "逗子市逗子5-2-53",
         category: "カフェ・スイーツ",
-        img: "https://images.unsplash.com/photo-1442512595331-e89e73853f31?auto=format&fit=crop&w=800&q=80",
+        img: "https://images.weserv.nl/?url=https://tabelog.com/imgview/original?id=r51529177114777",
         chairWithMat: true,
         parking: false,
         pantsRequired: false,
@@ -191,7 +192,7 @@
         area: "逗子",
         address: "逗子市新宿1-4-28",
         category: "ベーカリーカフェ",
-        img: "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=800&q=80",
+        img: "https://images.weserv.nl/?url=https://tabelog.com/imgview/original?id=r32709149026402",
         chairWithMat: true,
         parking: true,
         pantsRequired: false,
