@@ -37,7 +37,7 @@
         </span>
       </div>
 
-      <!-- エリア切り替えタブ -->
+      <!-- エリア切り替えタブ（葉山を追加） -->
       <div class="px-3 pb-2.5 flex space-x-2 overflow-x-auto hide-scrollbar" id="area-tabs">
         <button onclick="changeArea('ALL')" class="tab-btn active shrink-0 text-xs px-3.5 py-1.5 rounded-full font-bold bg-slate-900 text-white shadow-sm transition">全エリア</button>
         <button onclick="changeArea('鵠沼')" class="tab-btn shrink-0 text-xs px-3.5 py-1.5 rounded-full font-bold bg-white text-slate-600 border border-slate-200 transition">鵠沼</button>
@@ -45,6 +45,7 @@
         <button onclick="changeArea('藤沢')" class="tab-btn shrink-0 text-xs px-3.5 py-1.5 rounded-full font-bold bg-white text-slate-600 border border-slate-200 transition">藤沢</button>
         <button onclick="changeArea('茅ヶ崎')" class="tab-btn shrink-0 text-xs px-3.5 py-1.5 rounded-full font-bold bg-white text-slate-600 border border-slate-200 transition">茅ヶ崎</button>
         <button onclick="changeArea('逗子')" class="tab-btn shrink-0 text-xs px-3.5 py-1.5 rounded-full font-bold bg-white text-slate-600 border border-slate-200 transition">逗子</button>
+        <button onclick="changeArea('葉山')" class="tab-btn shrink-0 text-xs px-3.5 py-1.5 rounded-full font-bold bg-white text-slate-600 border border-slate-200 transition">葉山</button>
       </div>
     </header>
 
@@ -198,6 +199,34 @@
         highlight: "逗子海岸すぐそばのベーカリー",
         url: "https://www.google.com/maps/search/?api=1&query=ラトリエココン+逗子市新宿",
         note: "焼きたてパンが自慢の海近くベーカリー。朝のお散歩ついでに愛犬と店内でモーニング可能。"
+      },
+      {
+        id: 10,
+        name: "THE FIVE BEANS（ファイブビーンズ）",
+        area: "葉山",
+        type: "coffee",
+        categoryText: "自家焙煎スペシャルティ珈琲",
+        address: "三浦郡葉山町一色2075",
+        style: "店内ベンチ・抱っこOK",
+        parking: "あり（2台）",
+        pants: "任意",
+        highlight: "一色海岸・御用邸近くの名店",
+        url: "https://www.google.com/maps/search/?api=1&query=THE+FIVE+BEANS+葉山町一色",
+        note: "一色海岸近くの人気ロースタリー。コーヒー豆の購入や店内のベンチで愛犬と一緒に淹れたてを味わえます。"
+      },
+      {
+        id: 11,
+        name: "engawa cafe ＆ space",
+        area: "葉山",
+        type: "dining",
+        categoryText: "古民家カフェ・和食ランチ",
+        address: "三浦郡葉山町一色1664-1",
+        style: "土間スペース店内OK",
+        parking: "あり",
+        pants: "任意（マナー配慮）",
+        highlight: "昭和初期の趣ある旧別荘建築",
+        url: "https://www.google.com/maps/search/?api=1&query=engawa+cafe+葉山町一色",
+        note: "歴史ある古民家カフェ。土間スペース席はトイプードル等の小型犬同伴で店内の風情を楽しめます（予約推奨）。"
       }
     ];
 
@@ -219,7 +248,6 @@
         card.className = "block bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-200/90 active:scale-[0.98] transition-all hover:shadow-md";
 
         card.innerHTML = `
-          <!-- 上部バナー（右側のマップ詳細ボタンは完全削除） -->
           <div class="bg-gradient-to-r ${theme.gradient} px-3.5 py-2.5 flex items-center justify-between text-white">
             <div class="flex items-center space-x-2">
               <span class="text-xl bg-white/20 backdrop-blur rounded-full w-8 h-8 flex items-center justify-center">${theme.icon}</span>
