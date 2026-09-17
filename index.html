@@ -3,308 +3,293 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>湘南 犬と店内チェッカー</title>
+  <title>犬コロが入れる店</title>
   
+  <!-- PWA設定 -->
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-  <meta name="apple-mobile-web-app-title" content="犬と店内" />
+  <meta name="apple-mobile-web-app-title" content="犬コロ店" />
   <meta name="theme-color" content="#ffffff" />
   
+  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
   <style>
-    body, html { height: 100%; margin: 0; padding: 0; overflow: hidden; }
-    #map { height: 100%; width: 100%; z-index: 1; }
+    /* iOSスクロールバーのスムーズ化 */
+    body { -webkit-overflow-scrolling: touch; }
+    .hide-scrollbar::-webkit-scrollbar { display: none; }
+    .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   </style>
 </head>
 <body class="bg-slate-100 font-sans antialiased text-slate-800">
 
-  <div class="flex flex-col h-full w-full max-w-md mx-auto relative shadow-2xl bg-white overflow-hidden">
+  <!-- アプリ本体（スマホ幅固定） -->
+  <div class="min-h-screen w-full max-w-md mx-auto bg-slate-50 relative pb-12 shadow-2xl flex flex-col">
     
-    <!-- 上部ヘッダー -->
-    <header class="absolute top-0 left-0 right-0 z-10 bg-white/95 backdrop-blur shadow-sm p-3 border-b border-slate-100">
-      <div class="flex items-center justify-between mb-2">
-        <div class="flex items-center space-x-1.5">
-          <span class="text-xl">🐶</span>
-          <h1 class="text-sm font-bold text-slate-900 tracking-tight">湘南 犬と店内チェッカー</h1>
+    <!-- 固定ヘッダー -->
+    <header class="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm">
+      <div class="px-4 py-3 flex items-center justify-between">
+        <div class="flex items-center space-x-2">
+          <span class="text-2xl">🐶</span>
+          <h1 class="text-base font-extrabold text-slate-900 tracking-tight">犬コロが入れる店</h1>
         </div>
-        <span class="text-[10px] font-bold bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full">
-          店内同伴OK限定
+        <span class="text-[10px] font-bold bg-amber-100 text-amber-900 px-2 py-0.5 rounded-full">
+          店内同伴OK
         </span>
       </div>
 
-      <!-- エリア切り替え -->
-      <div class="flex space-x-1.5" id="area-filters">
-        <button onclick="filterArea('ALL')" class="area-btn text-xs px-3 py-1 rounded-full font-medium bg-slate-900 text-white">全エリア</button>
-        <button onclick="filterArea('鵠沼')" class="area-btn text-xs px-3 py-1 rounded-full font-medium bg-slate-100 text-slate-600">鵠沼</button>
-        <button onclick="filterArea('鎌倉')" class="area-btn text-xs px-3 py-1 rounded-full font-medium bg-slate-100 text-slate-600">鎌倉</button>
-        <button onclick="filterArea('藤沢')" class="area-btn text-xs px-3 py-1 rounded-full font-medium bg-slate-100 text-slate-600">藤沢</button>
+      <!-- エリア切り替え（横スクロール対応） -->
+      <div class="px-3 pb-2.5 flex space-x-2 overflow-x-auto hide-scrollbar" id="area-tabs">
+        <button onclick="changeArea('ALL')" class="tab-btn active shrink-0 text-xs px-3.5 py-1.5 rounded-full font-bold bg-slate-900 text-white shadow-sm transition">全エリア</button>
+        <button onclick="changeArea('鵠沼')" class="tab-btn shrink-0 text-xs px-3.5 py-1.5 rounded-full font-bold bg-white text-slate-600 border border-slate-200 transition">鵠沼</button>
+        <button onclick="changeArea('鎌倉')" class="tab-btn shrink-0 text-xs px-3.5 py-1.5 rounded-full font-bold bg-white text-slate-600 border border-slate-200 transition">鎌倉</button>
+        <button onclick="changeArea('藤沢')" class="tab-btn shrink-0 text-xs px-3.5 py-1.5 rounded-full font-bold bg-white text-slate-600 border border-slate-200 transition">藤沢</button>
+        <button onclick="changeArea('茅ヶ崎')" class="tab-btn shrink-0 text-xs px-3.5 py-1.5 rounded-full font-bold bg-white text-slate-600 border border-slate-200 transition">茅ヶ崎</button>
+        <button onclick="changeArea('逗子')" class="tab-btn shrink-0 text-xs px-3.5 py-1.5 rounded-full font-bold bg-white text-slate-600 border border-slate-200 transition">逗子</button>
       </div>
     </header>
 
-    <!-- 地図 -->
-    <div id="map" class="flex-1 w-full"></div>
-
-    <!-- 下部：店舗詳細カード -->
-    <div id="spot-card" class="hidden absolute bottom-4 left-3 right-3 z-20 bg-white p-4 rounded-2xl shadow-2xl border border-slate-100 transition-all">
-      <button onclick="closeCard()" class="absolute top-3 right-3 text-slate-400 hover:text-slate-600 text-lg leading-none p-1">✕</button>
-      <div id="spot-area" class="text-[11px] font-bold text-amber-600 mb-0.5"></div>
-      
-      <!-- 店名タップでGoogleマップ（写真・営業情報・ルート）にジャンプ -->
-      <h2 class="text-base font-bold text-slate-900 mb-1 pr-6 leading-snug">
-        <a id="spot-name-link" href="#" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:underline flex items-center gap-1">
-          <span id="spot-name"></span>
-          <span class="text-xs text-slate-400">↗</span>
-        </a>
-      </h2>
-
-      <p id="spot-address" class="text-xs text-slate-500 mb-2 flex items-center">📍 <span class="ml-1" id="spot-address-text"></span></p>
-
-      <!-- バッジ表示 -->
-      <div id="spot-badges" class="flex flex-wrap gap-1 mb-2"></div>
-
-      <!-- 備考・ルール -->
-      <p id="spot-note" class="text-xs text-slate-600 bg-slate-50 p-2.5 rounded-lg leading-relaxed"></p>
-    </div>
+    <!-- 店舗カード一覧リスト -->
+    <main class="flex-1 p-3.5 space-y-3.5" id="spot-list">
+      <!-- JavaScriptで動的生成 -->
+    </main>
 
   </div>
 
   <script>
-    // 実在店舗データ（URLはエラーの起きないGoogleマップ検索リンクに統一）
+    // 鵠沼・鎌倉・藤沢・茅ヶ崎・逗子の実在店内OKスポット
     const SPOTS = [
       {
         id: 1,
         name: "7325coffee",
         area: "鵠沼",
         address: "藤沢市鵠沼海岸1-9-17",
-        lat: 35.3195,
-        lng: 139.4674,
         category: "カフェ・自家焙煎珈琲",
+        img: "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=600&q=80",
         largeDog: true,
         parking: true,
         pantsRequired: false,
         url: "https://www.google.com/maps/search/?api=1&query=7325coffee+藤沢市鵠沼海岸",
-        note: "鵠沼海岸駅近く。落ち着いた店内で本格珈琲や焼き菓子が楽しめます。大型犬もOK。マット持参推奨。"
+        note: "鵠沼海岸駅スグ。店内は落ち着いた空気で大型犬も歓迎。散歩がてら極上コーヒーを楽しめます。"
       },
       {
         id: 2,
         name: "Days Kugenuma",
         area: "鵠沼",
         address: "藤沢市鵠沼海岸2-7-7",
-        lat: 35.3202,
-        lng: 139.4715,
         category: "カフェ・ダイナー",
+        img: "https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=600&q=80",
         largeDog: true,
         parking: false,
         pantsRequired: false,
         url: "https://www.google.com/maps/search/?api=1&query=Days+Kugenuma",
-        note: "鵠沼海岸商店街沿い。ローカルや愛犬家に親しまれる店内同伴OKのダイナーカフェ。"
+        note: "鵠沼海岸商店街の人気ダイナー。愛犬家サーファーの集う店内でハンバーガーやカフェが楽しめます。"
       },
       {
         id: 3,
-        name: "Dog Cafe Andy",
-        area: "鵠沼",
-        address: "藤沢市本鵠沼3-12-33",
-        lat: 35.3308,
-        lng: 139.4770,
-        category: "ドッグカフェ",
-        largeDog: true,
-        parking: true,
-        pantsRequired: false,
-        url: "https://www.google.com/maps/search/?api=1&query=Dog+Cafe+Andy+藤沢市本鵠沼",
-        note: "わんこメニューが充実した本格ドッグカフェ。大型犬も気兼ねなく店内利用できます。"
-      },
-      {
-        id: 4,
         name: "Andy Cafe 鎌倉店",
         area: "鎌倉",
         address: "鎌倉市由比ガ浜2-22-11",
-        lat: 35.3138,
-        lng: 139.5442,
-        category: "ドッグカフェ・レストラン",
+        category: "総合ドッグカフェ",
+        img: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=600&q=80",
         largeDog: true,
         parking: true,
         pantsRequired: true,
         url: "https://www.google.com/maps/search/?api=1&query=Andy+Cafe+鎌倉店",
-        note: "由比ヶ浜近くの総合ドッグカフェ。店内全席同伴OKで愛犬用メニューも多数あり。"
+        note: "由比ヶ浜そば。全席店内OKで手作り犬用メニューあり。マナーパンツ着用必須です。"
       },
       {
-        id: 5,
-        name: "GARDEN HOUSE Kamakura",
-        area: "鎌倉",
-        address: "鎌倉市御成町15-46",
-        lat: 35.3185,
-        lng: 139.5482,
-        category: "レストラン・カフェ",
-        largeDog: false,
-        parking: false,
-        pantsRequired: false,
-        url: "https://www.google.com/maps/search/?api=1&query=GARDEN+HOUSE+Kamakura",
-        note: "鎌倉駅西口すぐ。※一部の屋内席・半屋内席エリアで同伴可能（予約・確認推奨）。"
-      },
-      {
-        id: 6,
+        id: 4,
         name: "café蕾（カフェ ツボミ）",
         area: "鎌倉",
         address: "鎌倉市長谷2-13-37",
-        lat: 35.3122,
-        lng: 139.5342,
         category: "和カフェ・甘味処",
+        img: "https://images.unsplash.com/photo-1578474846511-04ba529f0b88?auto=format&fit=crop&w=600&q=80",
         largeDog: false,
         parking: false,
         pantsRequired: false,
         url: "https://www.google.com/maps/search/?api=1&query=café蕾+鎌倉市長谷",
-        note: "長谷寺近く。落ち着いた古民家風の店内で、愛犬と一緒にくずきりや和スイーツを味わえます。"
+        note: "長谷寺近く。古民家風の落ち着いた店内でくずきりや和菓子を愛犬と一緒に。"
       },
       {
-        id: 7,
+        id: 5,
         name: "Cafe Grand-Mere（グランメール）",
         area: "鎌倉",
         address: "鎌倉市雪ノ下1-8-36",
-        lat: 35.3245,
-        lng: 139.5539,
         category: "洋食・カフェ",
+        img: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=600&q=80",
         largeDog: false,
         parking: false,
         pantsRequired: false,
         url: "https://www.google.com/maps/search/?api=1&query=グランメール+鎌倉市雪ノ下",
-        note: "小町通りの脇道にある老舗カフェ。天候に左右されず店内でゆったり洋食ランチを楽しめます。"
+        note: "小町通りの路地裏にある老舗。雨の日でも店内でのんびり洋食ランチが食べられます。"
       },
       {
-        id: 8,
+        id: 6,
         name: "soundwave coffee roasters",
         area: "藤沢",
         address: "藤沢市鵠沼石上1-8-11",
-        lat: 35.3362,
-        lng: 139.4893,
         category: "コーヒースタンド",
+        img: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=600&q=80",
         largeDog: false,
         parking: false,
         pantsRequired: false,
         url: "https://www.google.com/maps/search/?api=1&query=soundwave+coffee+roasters+藤沢",
-        note: "藤沢駅南口の自家焙煎珈琲店。店内同伴OKで、お散歩中の休憩にぴったり。"
+        note: "藤沢駅南口の自家焙煎珈琲店。店内にわんこ連れで入店でき、散歩の休憩に最適。"
       },
       {
-        id: 9,
+        id: 7,
         name: "SAJI（サジ）",
         area: "藤沢",
         address: "藤沢市鵠沼石上2-1-11",
-        lat: 35.3342,
-        lng: 139.4880,
-        category: "ビストロ・カフェ",
+        category: "ビストロ・ワイン",
+        img: "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?auto=format&fit=crop&w=600&q=80",
         largeDog: false,
         parking: false,
         pantsRequired: false,
         url: "https://www.google.com/maps/search/?api=1&query=SAJI+藤沢市鵠沼石上",
-        note: "藤沢駅近くのお洒落なビストロ。店内で愛犬と一緒に自然派ワインや創作料理を楽しめます。"
+        note: "藤沢駅徒歩圏内のビストロ。店内で愛犬と一緒に本格料理とナチュールワインを楽しめます。"
       },
       {
-        id: 10,
-        name: "GREEN STAMPS COFFEE",
-        area: "辻堂・鵠沼",
-        address: "藤沢市辻堂西海岸1-9-1",
-        lat: 35.3210,
-        lng: 139.4520,
-        category: "カフェ・ベイク",
+        id: 8,
+        name: "Plenty's（プレンティーズ 茅ヶ崎本店）",
+        area: "茅ヶ崎",
+        address: "茅ヶ崎市東海岸北1-7-23",
+        category: "アイス・ワッフル",
+        img: "https://images.unsplash.com/photo-1563805042-7684c019e1cb?auto=format&fit=crop&w=600&q=80",
         largeDog: true,
         parking: true,
         pantsRequired: false,
-        url: "https://www.google.com/maps/search/?api=1&query=GREEN+STAMPS+COFFEE+辻堂",
-        note: "海へ向かう通り沿いの人気カフェ。アットホームで大型犬も店内でくつろげます。"
+        url: "https://www.google.com/maps/search/?api=1&query=プレンティーズ+茅ヶ崎本店",
+        note: "茅ヶ崎の有名アイスクリーム店。店舗奥のイートイン席は抱っこやリードで店内同伴OK。"
+      },
+      {
+        id: 9,
+        name: "サザンビーチカフェ",
+        area: "茅ヶ崎",
+        address: "茅ヶ崎市中海岸4-12986-52",
+        category: "海沿いカフェダイナー",
+        img: "https://images.unsplash.com/photo-1537047902294-62a40c20a6ae?auto=format&fit=crop&w=600&q=80",
+        largeDog: true,
+        parking: true,
+        pantsRequired: false,
+        url: "https://www.google.com/maps/search/?api=1&query=サザンビーチカフェ+茅ヶ崎",
+        note: "目の前がサザンビーチ。広々とした半屋内・屋内寄り席を含め、愛犬同伴にとても優しい名店。"
+      },
+      {
+        id: 10,
+        name: "ズシ アトリエ カフェ（ZUSHI atelier cafe）",
+        area: "逗子",
+        address: "逗子市逗子5-2-53",
+        category: "カフェ・スイーツ",
+        img: "https://images.unsplash.com/photo-1442512595331-e89e73853f31?auto=format&fit=crop&w=600&q=80",
+        largeDog: false,
+        parking: false,
+        pantsRequired: false,
+        url: "https://www.google.com/maps/search/?api=1&query=ズシアトリエカフェ+逗子",
+        note: "逗子駅からすぐの路地裏カフェ。落ち着いた店内で愛犬と一緒にのんびり過ごせます。"
+      },
+      {
+        id: 11,
+        name: "L'atelier Cocon（ラトリエ ココン）",
+        area: "逗子",
+        address: "逗子市新宿1-4-28",
+        category: "ベーカリーカフェ",
+        img: "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=600&q=80",
+        largeDog: true,
+        parking: true,
+        pantsRequired: false,
+        url: "https://www.google.com/maps/search/?api=1&query=ラトリエココン+逗子",
+        note: "逗子海岸そばのベーカリーカフェ。焼きたてパンが絶品で、店内にも愛犬同伴スペースあり。"
       }
     ];
 
-    // エリア境界
-    const southWest = L.latLng(35.2800, 139.4200);
-    const northEast = L.latLng(35.3600, 139.5800);
-    const shonanBounds = L.latLngBounds(southWest, northEast);
-
-    const map = L.map('map', { 
-      zoomControl: false,
-      maxBounds: shonanBounds,
-      maxBoundsViscosity: 1.0,
-      minZoom: 12,
-      maxZoom: 18
-    }).fitBounds(shonanBounds);
-
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; OpenStreetMap'
-    }).addTo(map);
-
-    let markers = [];
     let currentArea = 'ALL';
 
-    function renderMarkers(area) {
-      markers.forEach(m => map.removeLayer(m));
-      markers = [];
+    function renderList() {
+      const container = document.getElementById('spot-list');
+      container.innerHTML = '';
 
-      const filtered = area === 'ALL' ? SPOTS : SPOTS.filter(s => s.area.includes(area));
+      const filtered = currentArea === 'ALL' ? SPOTS : SPOTS.filter(s => s.area === currentArea);
+
+      if (filtered.length === 0) {
+        container.innerHTML = `<div class="text-center py-12 text-slate-400 text-sm">該当する店舗がありません</div>`;
+        return;
+      }
 
       filtered.forEach(spot => {
-        const marker = L.marker([spot.lat, spot.lng]).addTo(map);
-        marker.on('click', () => showDetail(spot));
-        markers.push(marker);
+        // カード要素作成（全体がGoogleマップリンク）
+        const card = document.createElement('a');
+        card.href = spot.url;
+        card.target = "_blank";
+        card.rel = "noopener noreferrer";
+        card.className = "block bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-200/80 active:scale-[0.99] transition";
+
+        // バッジ生成
+        let badgesHtml = '';
+        if (spot.largeDog) {
+          badgesHtml += `<span class="text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 px-1.5 py-0.5 rounded">大型犬OK</span>`;
+        }
+        if (spot.parking) {
+          badgesHtml += `<span class="text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200 px-1.5 py-0.5 rounded">駐車場あり</span>`;
+        }
+        if (spot.pantsRequired) {
+          badgesHtml += `<span class="text-[10px] font-bold bg-rose-50 text-rose-700 border border-rose-200 px-1.5 py-0.5 rounded">オムツ必須</span>`;
+        }
+
+        card.innerHTML = `
+          <div class="relative h-44 w-full bg-slate-200 overflow-hidden">
+            <img src="${spot.img}" alt="${spot.name}" class="w-full h-full object-cover" loading="lazy" />
+            <span class="absolute top-3 left-3 bg-slate-900/80 backdrop-blur text-white text-[11px] font-bold px-2.5 py-1 rounded-md">
+              ${spot.area}
+            </span>
+          </div>
+          <div class="p-3.5">
+            <div class="flex items-start justify-between mb-1">
+              <div>
+                <span class="text-[11px] font-semibold text-amber-600 block">${spot.category}</span>
+                <h2 class="text-base font-bold text-slate-900 leading-snug flex items-center gap-1">
+                  ${spot.name}
+                  <span class="text-xs text-slate-400 font-normal">↗</span>
+                </h2>
+              </div>
+            </div>
+            
+            <p class="text-xs text-slate-500 mb-2.5 flex items-center">
+              📍 <span class="ml-1">${spot.address}</span>
+            </p>
+
+            <div class="flex flex-wrap gap-1.5 mb-2.5">
+              ${badgesHtml}
+            </div>
+
+            <p class="text-xs text-slate-600 bg-slate-50 p-2.5 rounded-lg leading-relaxed">
+              ${spot.note}
+            </p>
+          </div>
+        `;
+
+        container.appendChild(card);
       });
-
-      if (filtered.length > 0 && area !== 'ALL') {
-        const group = new L.featureGroup(markers);
-        map.fitBounds(group.getBounds().pad(0.3));
-      }
     }
 
-    function showDetail(spot) {
-      document.getElementById('spot-area').innerText = `${spot.area} ・ ${spot.category}`;
-      
-      // 店名リンク設定
-      document.getElementById('spot-name').innerText = spot.name;
-      document.getElementById('spot-name-link').href = spot.url;
-
-      document.getElementById('spot-address-text').innerText = spot.address;
-      document.getElementById('spot-note').innerText = spot.note;
-
-      // バッジ生成
-      const badgeContainer = document.getElementById('spot-badges');
-      badgeContainer.innerHTML = '';
-      if (spot.largeDog) {
-        badgeContainer.innerHTML += `<span class="text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 px-1.5 py-0.5 rounded">大型犬OK</span>`;
-      }
-      if (spot.parking) {
-        badgeContainer.innerHTML += `<span class="text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200 px-1.5 py-0.5 rounded">🅿️ 駐車場あり</span>`;
-      }
-      if (spot.pantsRequired) {
-        badgeContainer.innerHTML += `<span class="text-[10px] font-bold bg-rose-50 text-rose-700 border border-rose-200 px-1.5 py-0.5 rounded">オムツ/マナーパンツ</span>`;
-      }
-
-      document.getElementById('spot-card').classList.remove('hidden');
-      map.panTo([spot.lat, spot.lng]);
-    }
-
-    function closeCard() {
-      document.getElementById('spot-card').classList.add('hidden');
-    }
-
-    function filterArea(area) {
+    function changeArea(area) {
       currentArea = area;
-      closeCard();
-      
-      document.querySelectorAll('.area-btn').forEach(btn => {
-        if (btn.innerText.includes(area) || (area === 'ALL' && btn.innerText === '全エリア')) {
-          btn.className = 'area-btn text-xs px-3 py-1 rounded-full font-medium bg-slate-900 text-white';
+
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        if ((area === 'ALL' && btn.innerText === '全エリア') || btn.innerText === area) {
+          btn.className = 'tab-btn active shrink-0 text-xs px-3.5 py-1.5 rounded-full font-bold bg-slate-900 text-white shadow-sm transition';
         } else {
-          btn.className = 'area-btn text-xs px-3 py-1 rounded-full font-medium bg-slate-100 text-slate-600';
+          btn.className = 'tab-btn shrink-0 text-xs px-3.5 py-1.5 rounded-full font-bold bg-white text-slate-600 border border-slate-200 transition';
         }
       });
 
-      renderMarkers(area);
-      if (area === 'ALL') {
-        map.fitBounds(shonanBounds);
-      }
+      renderList();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // 初回レンダリング
-    renderMarkers('ALL');
+    // 初回描画
+    renderList();
   </script>
 </body>
 </html>
